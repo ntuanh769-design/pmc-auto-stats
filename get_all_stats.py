@@ -187,9 +187,7 @@ def main():
     
     if sub > 0:
         try:
-            # Cộng thêm 7 giờ để ra giờ VN
-now_vn = datetime.datetime.now() + datetime.timedelta(hours=7)
-current_time = now_vn.strftime("%Y-%m-%d %H:%M:%S")
+            current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             worksheet.append_row([current_time, view, sub, vid, sp, tt, fb])
             print("🎉 ĐÃ LƯU THÀNH CÔNG!")
         except Exception as e:
