@@ -4,7 +4,7 @@ from googleapiclient.discovery import build
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager # <--- TỰ ĐỘNG TẢI DRIVER
+from webdriver_manager.chrome import ChromeDriverManager
 import datetime
 import time
 import os
@@ -27,7 +27,6 @@ def setup_driver():
     options = webdriver.ChromeOptions()
     
     # --- CẤU HÌNH ĐỂ CHẠY TRÊN SERVER/CLOUD ---
-    # Headless: Chạy ẩn không cần bật cửa sổ trình duyệt (Bắt buộc cho GitHub Actions)
     options.add_argument("--headless=new") 
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
@@ -39,7 +38,6 @@ def setup_driver():
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--ignore-ssl-errors')
 
-    # Dùng ChromeDriverManager để tự động cài driver phù hợp mọi máy
     service = Service(ChromeDriverManager().install())
     return webdriver.Chrome(service=service, options=options)
 
@@ -59,30 +57,31 @@ def get_youtube_realtime(driver):
     sub_val = 0; view_val = 0
     try:
         driver.get(LIVECOUNTS_URL)
-        time.sleep(15) # Đợi trang load
+        time.sleep(15) 
         
         # Tắt Cookie
         try:
             btns = driver.find_elements(By.XPATH, "//*[contains(text(), 'Agree') or contains(text(), 'Accept')]")
             for b in btns: 
-                if b.is_displayed(): b.click(); break
+                if b.is_displayed():
+                    b.click()
+                    break
         except: pass
         
-        # Cuộn trang để kích hoạt số liệu
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight/2);"); time.sleep(2)
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);"); time.sleep(3)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight/2);")
+        time.sleep(2)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(3)
         
-        # Lấy Sub
         try:
             sub = int(re.sub(r'[^\d]', '', driver.find_element(By.CSS_SELECTOR, ".odometer.odometer-auto-theme").text))
             sub_val = sub
         except: pass
         
-        # Lấy View (XPath chuẩn)
         try:
             txt = driver.find_element(By.XPATH, '//*[@id="__next"]/div/section/div[3]/div[4]/div[1]').text
             cln = re.sub(r'[^\d]', '', txt)
-            if len(cln) > 9: cln = cln[:9] # Cắt số rác nếu có
+            if len(cln) > 9: cln = cln[:9]
             view_val = int(cln)
         except: pass
     except Exception as e: print(f"      ❌ Lỗi YT: {e}")
@@ -95,7 +94,8 @@ def get_social_stats(driver):
     # Spotify
     print("   --> [2/4] Đang lấy Spotify...")
     try:
-        driver.get(SPOTIFY_URL); time.sleep(3)
+        driver.get(SPOTIFY_URL)
+        time.sleep(3)
         m = re.search(r'([\d\.,]+)\s+(monthly listeners|người nghe)', driver.find_element(By.TAG_NAME, "body").text, re.IGNORECASE)
         if m: sp = int(m.group(1).replace(',', '').replace('.', ''))
     except: pass
@@ -103,13 +103,13 @@ def get_social_stats(driver):
     # TikTok
     print("   --> [3/4] Đang lấy TikTok...")
     try:
-        driver.get(TIKTOK_URL); time.sleep(10)
-        # Cách 1: Tìm thẻ HTML
+        driver.get(TIKTOK_URL)
+        time.sleep(10)
         els = driver.find_elements(By.XPATH, "//*[contains(text(), '5.') or contains(text(), '5,')]")
         for e in els:
             c = re.sub(r'[^\d]', '', e.text)
             if c and 3000000 < int(c) < 10000000: tt = int(c); break
-        # Cách 2: Quét body nếu Cách 1 fail
+        
         if tt == 0:
             nums = re.findall(r'\d[\d,\.\s]*\d', driver.find_element(By.TAG_NAME, "body").text)
             cands = [int(re.sub(r'[^\d]', '', n)) for n in nums if re.sub(r'[^\d]', '', n)]
@@ -120,8 +120,15 @@ def get_social_stats(driver):
     # Facebook
     print("   --> [4/4] Đang lấy Facebook...")
     try:
-        driver.get(FACEBOOK_URL); time.sleep(5)
-        try: driver.find_element(By.XPATH, "//div[@aria-label='Close']").click(); except: pass
+        driver.get(FACEBOOK_URL)
+        time.sleep(5)
+        # --- ĐOẠN SỬA LỖI SYNTAX ---
+        try:
+            driver.find_element(By.XPATH, "//div[@aria-label='Close']").click()
+        except:
+            pass
+        # ---------------------------
+        
         m = re.search(r'([\d\.,MK]+)\s+(followers|người theo dõi)', driver.find_element(By.TAG_NAME, "body").text, re.IGNORECASE)
         if m:
             t = m.group(1).upper().replace(',', '.').strip(); mul=1
@@ -136,20 +143,16 @@ def get_social_stats(driver):
 def main():
     print("🚀 BẮT ĐẦU CẬP NHẬT DỮ LIỆU (AUTO MODE)...")
     
-    # --- XỬ LÝ CREDENTIALS THÔNG MINH ---
-    # Kiểm tra xem có biến môi trường GCP_CREDENTIALS không (Dùng cho GitHub/Cloud)
     json_creds = os.environ.get("GCP_CREDENTIALS")
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
     
     try:
         if json_creds:
-            # Nếu chạy trên Cloud: Đọc từ biến môi trường
-            print("   🔑 Phát hiện môi trường Cloud, đang dùng Secret Credentials...")
+            print("   🔑 Phát hiện môi trường Cloud...")
             creds_dict = json.loads(json_creds)
             creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
         else:
-            # Nếu chạy trên Laptop: Đọc file credentials.json
-            print("   💻 Phát hiện môi trường Local, đang dùng credentials.json...")
+            print("   💻 Phát hiện môi trường Local...")
             creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
 
         client = gspread.authorize(creds)
@@ -159,7 +162,6 @@ def main():
         print(f"❌ Lỗi xác thực Google Sheet: {e}")
         return
 
-    # Lấy dữ liệu
     vid_count = get_video_count_api()
     driver = setup_driver()
     try:
@@ -172,7 +174,6 @@ def main():
     print(f"✅ Kết quả: View={yt_view:,} | Sub={yt_sub:,} | TikTok={tik_fl:,}")
     print("="*40)
     
-    # Ghi vào Sheet
     if yt_view > 0:
         try:
             current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
