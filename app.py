@@ -16,9 +16,8 @@ SHEET_NAME = 'PMC Data Center'
 VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8'] 
 YOUTUBE_API_KEY = 'AIzaSyAueu53W-r0VWcYJwYrSSboOKuWYQfLn34' 
 
-# LINK ẢNH (Bạn thay link ảnh lịch trình vào biến dưới đây)
-SCHEDULE_IMAGE_URL = "https://scontent.fsgn2-10.fna.fbcdn.net/v/t39.30808-6/616157956_1332069402299119_1295986647605451446_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGrTxMXiKy0l4ivVd92hG0Mx-Uk_itVkQ3H5ST-K1WRDUpiLGYZ4bPh_X5yaCRIM_GXAEc20SLFRvlLwzc_1hgw&_nc_ohc=BWqZmoQMt4oQ7kNvwHyvr0K&_nc_oc=AdlSsG5lBYKuLB8oB_GdgMAHacY4mQbEZUrkBgoViyT9lfuDfTKozQTzTWiIRMoty5a_s3AVN20idvfr58L6JrLT&_nc_zt=23&_nc_ht=scontent.fsgn2-10.fna&_nc_gid=Cgi28AHMPtAEMud1L3qiig&oh=00_AfodxdKttlNVn8qMBP1i_J_JkwsG0ojR3_AkYTHcJh-x-Q&oe=69700BB1" 
-
+# Link ảnh và Mạng xã hội
+SCHEDULE_IMAGE_URL = "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=2068&auto=format&fit=crop" 
 BANNER_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/600369698_1419646709529546_341344486868245985_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeE8R8ouge4yL7lfWGQ5Kzk1Enry68g3cr0SevLryDdyvaWspFlBItEaOUW321Od9poGbHjYncGX9_MS7BEcv6Ww&_nc_ohc=WHolhcYE84IQ7kNvwH3WDS7&_nc_oc=AdlMDmMAztdFXjYHzVG6BJpmRMy1E7qVPlz3DWxOrwo2YrZS0MeRHLPCU2rF4_OdTXE&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=AXvAnGOph6iEFu_TWBD-SA&oh=00_AfoafS9eKG1wduMrKvUIYzK6Mu4ZIs0Q3Idtuj5CW5qvEg&oe=696F8D56"
 AVATAR_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/482242951_1184903749670511_116581152088062484_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHl6z1Zf722SPdydZ2cSXjkZpHk_q-4D51mkeT-r7gPndTlCsa2S-9POMvKIBb4ckII1tv_ascEHrs3kes9q9GO&_nc_ohc=0KAgPDwqVoYQ7kNvwGvYZzT&_nc_oc=AdkiSSI5Nm1z4L60wjOWhF2RlhO42CTckj5fJghrGNCIl1rRcnH9YUwQDlrcIYwvWshnvTSvZ0pqlV2sGzg6tPGG&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=VKwmNPd5x84LUuWGX44UBw&oh=00_AfpI8odqVyRf4fYhFFiablQhci6WR8tZfRwbNfW2uoUEig&oe=696F885F"
 
@@ -30,7 +29,7 @@ SOCIAL_LINKS = {
     "threads": "https://www.threads.net/@phuongmychi"
 }
 
-# Dữ liệu khởi tạo cho Fandom Voting (Giống hình bạn gửi)
+# Dữ liệu khởi tạo Voting
 INIT_VOTING_DATA = [
     {"rank": 1, "name": "KINGDOM", "votes": 74854, "change": 9},
     {"rank": 2, "name": "Flowers", "votes": 54465, "change": 10},
@@ -103,7 +102,6 @@ def load_sheet_data():
         
         df['Time'] = pd.to_datetime(df['Time'])
         
-        # --- FIX SỐ 0 (TIKTOK) ---
         latest = df.iloc[-1].copy()
         for col in cols_to_fix:
             if col in df.columns and latest[col] == 0:
@@ -157,13 +155,12 @@ st.markdown("""
     .val-comm { color: #FFD54F; font-weight: 700; }
     .vid-footer { border-top: 1px solid #333; padding-top: 12px; margin-top: 12px; font-size: 11px; color: #666; text-align: right; }
 
-    /* LEADERBOARD TABLE (VOTING TAB) */
+    /* VOTING STYLES */
     .voting-header { font-size: 24px; font-weight: bold; margin-bottom: 20px; text-align: center; color: #E0B0FF; text-transform: uppercase; letter-spacing: 1px;}
     .vote-table-container { background: #1A1F26; border-radius: 12px; padding: 20px; border: 1px solid #333; }
     .vote-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 10px; border-bottom: 1px solid #2A2F38; transition: background 0.2s;}
     .vote-row:last-child { border-bottom: none; }
     .vote-row:hover { background: #222831; }
-    
     .rank-col { width: 50px; font-size: 18px; font-weight: bold; color: #FFD700; }
     .name-col { flex-grow: 1; font-size: 16px; font-weight: 600; color: #FFF; text-transform: uppercase; }
     .total-col { width: 120px; text-align: right; font-size: 16px; font-weight: bold; color: #FFF; }
@@ -196,7 +193,7 @@ st.markdown("""
 svg_icons = {
     "facebook": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5z"/></svg>""",
     "spotify": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.434-5.305-1.758-8.78-1.022-.328.084-.65-.133-.73-.463-.085-.33.133-.65.463-.73 3.81-.808 7.075-.44 9.7 1.15.293.18.385.563.206.857zm1.228-2.727c-.226.366-.696.482-1.06.26-2.687-1.652-6.785-2.13-9.965-1.164-.41.122-.835-.126-.96-.533-.122-.41.126-.835.533-.96 3.617-1.1 8.205-.557 11.302 1.345.365.225.482.694.26 1.06zm.11-2.786c-3.22-1.91-8.53-2.088-11.596-1.143-.467.146-.976-.105-1.123-.573-.146-.47.105-.977.573-1.124 3.57-1.1 9.46-.88 13.146 1.31.42.245.553.792.308 1.21-.246.42-.793.553-1.21.308z"/></svg>""",
-    "youtube": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M21.582,6.186c-0.23-0.86-0.908-1.538-1.768-1.768C18.254,4,12,4,12,4S5.746,4,4.186,4.418 c-0.86,0.23-1.538,0.908-1.768,1.768C2,7.746,2,12,2,12s0,4.254,0.418,5.814c0.23,0.86,0.908,1.538,1.768,1.768 C5.746,20,12,20,12,20s6.254,0,7.814-0.418c0.86-0.23,1.538-0.908,1.768-1.768C22,16.254,22,12,22,12S22,7.746,21.582,6.186z M10,15 V9l5.208,3L10,15z"/></svg>""",
+    "youtube": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M21.582,6.186c-0.23-0.86-0.908-1.538-1.768-1.768C18.254,4,12,4,12,4S5.746,4,4.186,4.418 c-0.86,0.23-1.538,0.908-1.768,1.768C2,7.746,2,12,2,12s0,4.254,0.418,5.814c0.23,0.86,0.908,1.538,1.768,1.768C22,16.254,22,12,22,12S22,7.746,21.582,6.186z M10,15 V9l5.208,3L10,15z"/></svg>""",
     "instagram": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>""",
     "threads": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12.274 2.001c-5.536 0-10.002 4.466-10.002 10.001s4.466 10.002 10.002 10.002 10.002-4.467 10.002-10.002-4.466-10.001-10.002-10.001zm.002 18.126c-4.489 0-8.126-3.636-8.126-8.125 0-4.489 3.637-8.125 8.126-8.125 4.489 0 8.125 3.636 8.125 8.125 0 4.489-3.636 8.125-8.125 8.125zm5.692-8.125h-1.506c-.027-1.975-.918-3.353-2.322-3.737 1.733-.456 2.672-1.721 2.672-3.106 0-1.644-1.407-2.854-3.492-2.854-2.158 0-3.679 1.274-3.679 3.113 0 1.379.896 2.65 2.625 3.105-1.406.388-2.298 1.767-2.323 3.479h-1.531c.038-2.552 1.548-4.567 3.806-5.111-1.847-.598-2.89-2.186-2.89-3.859 0-2.428 2.046-4.323 5.054-4.323 2.968 0 4.858 1.862 4.858 4.293 0 1.67-.989 3.214-2.759 3.833 2.184.552 3.659 2.549 3.701 5.169l-.004-.001zm-6.722-6.641c0-1.189.965-2.147 2.158-2.147 1.236 0 2.085.957 2.085 2.053 0 1.158-.887 2.077-2.118 2.181-1.206-.098-2.125-1.023-2.125-2.087zm2.125 3.585c1.437.127 2.555 1.234 2.555 2.639 0 1.495-1.231 2.697-2.737 2.697-1.541 0-2.792-1.247-2.792-2.794 0-1.454 1.167-2.609 2.685-2.682l.289.14z"/></svg>""",
 }
@@ -204,16 +201,21 @@ svg_icons = {
 # ==========================================
 # --- 4. STATE & LOGIC ---
 # ==========================================
+# Khởi tạo dữ liệu nếu chưa có
 if 'init_done' not in st.session_state:
     df, latest = load_sheet_data()
     st.session_state['df'] = df
     st.session_state['latest'] = latest
     st.session_state['total_view_sim'] = int(latest['Youtube_View']) if latest is not None else 0
     st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
-    # Khởi tạo dữ liệu voting
-    st.session_state['voting_data'] = INIT_VOTING_DATA
-    st.session_state['voting_history'] = [] # Lưu lịch sử để vẽ biểu đồ
     st.session_state['init_done'] = True
+
+# --- FIX LỖI KEYERROR: Kiểm tra và khởi tạo 'voting_data' nếu bị thiếu ---
+if 'voting_data' not in st.session_state:
+    st.session_state['voting_data'] = INIT_VOTING_DATA
+
+if 'voting_history' not in st.session_state:
+    st.session_state['voting_history'] = []
 
 # ==========================================
 # --- 5. MAIN LAYOUT ---
@@ -263,7 +265,7 @@ with tab_about:
 """)
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TAB LỊCH TRÌNH (ĐÃ ĐỔI SANG ẢNH) ---
+# --- TAB LỊCH TRÌNH ---
 with tab_schedule:
     st.markdown('<div class="content-spacer"></div>', unsafe_allow_html=True)
     st.markdown('<div class="main-content">', unsafe_allow_html=True)
@@ -300,7 +302,7 @@ with tab_vote:
     
     # Placeholder cho bảng số liệu và biểu đồ
     vote_table_placeholder = st.empty()
-    st.write("") # Spacer
+    st.write("") 
     vote_chart_placeholder = st.empty()
     
     st.markdown('</div>', unsafe_allow_html=True)
@@ -316,18 +318,15 @@ while True:
     
     # Tăng vote ngẫu nhiên
     for item in st.session_state['voting_data']:
-        inc = random.randint(0, 3) # Tăng ít để chậm rãi
+        inc = random.randint(0, 3) 
         item['votes'] += inc
-        item['change'] = inc # Hiển thị số tăng vừa rồi
+        item['change'] = inc 
         
-    # Sắp xếp lại thứ hạng
     st.session_state['voting_data'] = sorted(st.session_state['voting_data'], key=lambda x: x['votes'], reverse=True)
     
-    # Cập nhật lại Rank số
     for i, item in enumerate(st.session_state['voting_data']):
         item['rank'] = i + 1
         
-    # Lưu lịch sử để vẽ biểu đồ (chỉ lưu 20 điểm dữ liệu gần nhất để nhẹ)
     history_point = {"Time": current_time.strftime("%H:%M:%S")}
     for item in st.session_state['voting_data']:
         history_point[item['name']] = item['votes']
@@ -381,7 +380,6 @@ while True:
 
     # --- RENDER VOTING TABLE (HTML) ---
     with vote_table_placeholder.container():
-        # Tạo HTML table
         html_rows = ""
         for item in st.session_state['voting_data']:
             change_html = f"<span class='badge-plus'>+{item['change']}</span>" if item['change'] > 0 else "<span class='badge-neutral'>0</span>"
@@ -411,7 +409,6 @@ while True:
         if len(st.session_state['voting_history']) > 2:
             st.markdown("#### 📈 DIỄN BIẾN ĐƯỜNG ĐUA")
             df_hist = pd.DataFrame(st.session_state['voting_history'])
-            # Melt dataframe để vẽ nhiều đường
             df_melt = df_hist.melt(id_vars=['Time'], var_name='Candidate', value_name='Votes')
             
             fig = px.line(df_melt, x='Time', y='Votes', color='Candidate', 
@@ -425,7 +422,7 @@ while True:
 
     time.sleep(1)
 
-# FOOTER (Updated Content)
+# FOOTER
 st.markdown("""
 <div class="footer-container">
     <div class="footer-title">WeYoung Tracker</div>
