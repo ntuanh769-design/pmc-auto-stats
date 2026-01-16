@@ -44,7 +44,7 @@ VOTING_CATEGORIES = {
 }
 
 # ==========================================
-# --- 2. HÀM XỬ LÝ SỐ LIỆU (CÓ FIX TIKTOK = 0) ---
+# --- 2. HÀM XỬ LÝ SỐ LIỆU ---
 # ==========================================
 def fetch_video_data_api(video_ids):
     data_map = {}
@@ -97,7 +97,6 @@ def load_sheet_data():
         df = pd.DataFrame(data)
         if df.empty: return df, None
 
-        # Chuyển đổi số liệu thành dạng số
         cols_to_fix = ['Youtube_View', 'Youtube_Sub', 'Spotify_Listener', 'TikTok_Follower', 'Facebook_Follower']
         for col in cols_to_fix:
             if col in df.columns:
@@ -105,23 +104,16 @@ def load_sheet_data():
         
         df['Time'] = pd.to_datetime(df['Time'])
         
-        # --- THUẬT TOÁN FIX LỖI SỐ 0 (TIKTOK/FACEBOOK) ---
-        # Thay vì chỉ lấy dòng cuối (iloc[-1]), ta lấy dòng cuối, 
-        # nhưng nếu cột nào bằng 0 thì tìm ngược về quá khứ để lấy số gần nhất > 0.
+        # --- FIX SỐ 0 (TIKTOK) ---
         latest = df.iloc[-1].copy()
-        
         for col in cols_to_fix:
             if col in df.columns and latest[col] == 0:
-                # Lọc ra các dòng có giá trị > 0 của cột này
                 valid_values = df[df[col] > 0][col]
                 if not valid_values.empty:
-                    # Lấy giá trị hợp lệ mới nhất
                     latest[col] = valid_values.iloc[-1]
         
         return df, latest
-    except Exception as e: 
-        print(e)
-        return pd.DataFrame(), None
+    except: return pd.DataFrame(), None
 
 # ==========================================
 # --- 3. CSS TÙY CHỈNH ---
@@ -130,12 +122,11 @@ st.set_page_config(page_title="Phuong My Chi Official", page_icon="👑", layout
 
 st.markdown("""
 <style>
-    /* RESET & LAYOUT */
     #MainMenu, header, footer {visibility: hidden;}
     .stApp { background-color: #0E1117; color: #E0E0E0; font-family: sans-serif; }
     .block-container { padding: 0 !important; max-width: 100% !important; }
 
-    /* NAVIGATION (STICKY) */
+    /* NAVIGATION */
     .stTabs { background: #0E1117; position: sticky; top: 0; z-index: 999; padding-top: 10px; border-bottom: 1px solid #333; }
     .stTabs [data-baseweb="tab-list"] { justify-content: center; gap: 30px; }
     .stTabs [data-baseweb="tab"] { background: transparent; border: none; color: #AAA; font-weight: 700; font-size: 16px; text-transform: uppercase; }
@@ -147,7 +138,6 @@ st.markdown("""
     .profile-section { margin-top: -120px; text-align: center; position: relative; z-index: 10; padding-bottom: 30px; }
     .avatar { border-radius: 50%; width: 160px; height: 160px; object-fit: cover; border: 4px solid #FFD700; background: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.6); }
     .artist-name { font-size: 48px; font-weight: 900; color: #FFF; margin: 10px 0 0 0; }
-    
     .social-links { display: flex; gap: 20px; justify-content: center; margin-top: 15px; }
     .social-icon svg { fill: #AAA; transition: all 0.3s; }
     .social-icon:hover svg { fill: #FFF; transform: translateY(-3px); }
@@ -176,12 +166,6 @@ st.markdown("""
     .podium-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid white; margin-bottom: 10px; }
     .podium-name { font-weight: bold; font-size: 14px; margin-top: 10px; color: #FFF; }
     .podium-votes { font-size: 12px; color: #AAA; }
-    .rank-list-item { background: #1A1F26; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #333; }
-    .rank-num { font-size: 24px; font-weight: bold; width: 40px; color: #666; }
-    .rank-info { flex-grow: 1; margin-left: 10px; }
-    .rank-name { font-weight: bold; color: white; }
-    .rank-bar-bg { background: #333; height: 6px; border-radius: 3px; margin-top: 5px; width: 100%; }
-    .rank-bar-fill { height: 6px; border-radius: 3px; background: #FFD700; }
 
     /* OTHERS */
     .metric-card { background: #16181C; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #333; }
@@ -190,9 +174,7 @@ st.markdown("""
     .live-dot { height: 8px; width: 8px; background: #FF4B4B; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
     
     .main-content { padding: 0 40px; }
-    
-    /* SPACER FOR CONTENT BELOW STICKY HEADER */
-    .content-spacer { height: 60px; }
+    .content-spacer { height: 60px; } /* Spacer để tránh bị menu che */
 
     .calendar-container { background: #1A1F26; padding: 25px; border-radius: 20px; max-width: 800px; margin: 0 auto; border: 1px solid #333; }
     .cal-header { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px; color: white; }
@@ -227,9 +209,7 @@ if 'init_done' not in st.session_state:
     df, latest = load_sheet_data()
     st.session_state['df'] = df
     st.session_state['latest'] = latest
-    # Khởi tạo số view tổng ảo từ số thật
-    real_val = int(latest['Youtube_View']) if latest is not None else 0
-    st.session_state['total_view_sim'] = real_val
+    st.session_state['total_view_sim'] = int(latest['Youtube_View']) if latest is not None else 0
     st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
     st.session_state['voting_sim'] = VOTING_CATEGORIES
     st.session_state['init_done'] = True
@@ -265,7 +245,6 @@ with tab_home:
 
 # --- TAB GIỚI THIỆU ---
 with tab_about:
-    # Spacer để tránh bị header che
     st.markdown('<div class="content-spacer"></div>', unsafe_allow_html=True)
     st.markdown('<div class="main-content">', unsafe_allow_html=True)
     c1, c2 = st.columns([1, 2])
@@ -359,7 +338,7 @@ while True:
             c1, c2, c3, c4 = st.columns(4)
             c1.markdown(f"""<div class="metric-card"><div class="metric-lbl">TOTAL VIEWS <span class="live-dot"></span></div><div class="metric-val" style="color:#FF4B4B">{st.session_state['total_view_sim']:,}</div></div>""", unsafe_allow_html=True)
             c2.markdown(f"""<div class="metric-card"><div class="metric-lbl">SUBSCRIBERS</div><div class="metric-val">{lat['Youtube_Sub']:,}</div></div>""", unsafe_allow_html=True)
-            # TikTok check 0
+            # Dùng biến lat đã được fix lỗi số 0
             tt_val = lat['TikTok_Follower']
             c3.markdown(f"""<div class="metric-card"><div class="metric-lbl">TIKTOK FANS</div><div class="metric-val">{tt_val:,}</div></div>""", unsafe_allow_html=True)
             c4.markdown(f"""<div class="metric-card"><div class="metric-lbl">SPOTIFY</div><div class="metric-val" style="color:#1DB954">{lat['Spotify_Listener']:,}</div></div>""", unsafe_allow_html=True)
@@ -422,20 +401,7 @@ while True:
             <br>
             """, unsafe_allow_html=True)
             
-            for i, cand in enumerate(sorted_candidates[3:]):
-                rank = i + 4
-                max_vote = top1['votes']
-                percent = (cand['votes'] / max_vote) * 100
-                st.markdown(f"""
-                <div class="rank-list-item">
-                    <div class="rank-num">#{rank}</div>
-                    <div class="rank-info">
-                        <div class="rank-name">{cand['name']}</div>
-                        <div class="rank-bar-bg"><div class="rank-bar-fill" style="width:{percent}%;"></div></div>
-                    </div>
-                    <div style="font-weight:bold; color:#FFD700;">{cand['votes']:,} vote</div>
-                </div>
-                """, unsafe_allow_html=True)
+            # --- ĐÃ XÓA VÒNG LẶP LIST RANK #4, #5 ---
                 
             st.markdown("#### 📈 DIỄN BIẾN BÌNH CHỌN (24H QUA)")
             chart_data = []
