@@ -211,16 +211,17 @@ with tab_about:
     c1, c2 = st.columns([1, 2])
     with c1: st.image(AVATAR_URL, width=300)
     with c2:
+        # LƯU Ý: Nội dung bên dưới phải nằm sát lề trái
         st.markdown("""
-        ### PHƯƠNG MỸ CHI
-        **Phuong My Chi** (sinh năm 2003) là một nữ ca sĩ nổi tiếng Việt Nam, được biết đến rộng rãi sau khi đạt danh hiệu Á quân chương trình *Giọng hát Việt nhí* mùa đầu tiên (2013).
-    
-    * **2013:** Á quân The Voice Kids Vietnam. Gây bão với "Quê Em Mùa Nước Lũ".
-    * **2014-2020:** Theo đuổi dòng nhạc dân ca, trữ tình. Phát hành nhiều album thành công như "Thương về miền Trung", "Chờ người". Đạt giải Mai Vàng, Cống Hiến.
-    * **2022-Nay:** Lột xác mạnh mẽ về hình ảnh và phong cách âm nhạc. Kết hợp giữa chất liệu truyền thống và âm nhạc điện tử hiện đại.
-    
-    **Dấu ấn gần đây:** Album "Vũ Trụ Cò Bay" (2023) là một cú hích lớn, khẳng định tư duy âm nhạc độc đáo và trưởng thành của Phương Mỹ Chi.
-        """)
+### PHƯƠNG MỸ CHI
+**Phuong My Chi** (sinh năm 2003) là một nữ ca sĩ nổi tiếng Việt Nam, được biết đến rộng rãi sau khi đạt danh hiệu Á quân chương trình *Giọng hát Việt nhí* mùa đầu tiên (2013).
+
+* **2013:** Á quân The Voice Kids Vietnam. Gây bão với "Quê Em Mùa Nước Lũ".
+* **2014-2020:** Theo đuổi dòng nhạc dân ca, trữ tình. Phát hành nhiều album thành công như "Thương về miền Trung", "Chờ người". Đạt giải Mai Vàng, Cống Hiến.
+* **2022-Nay:** Lột xác mạnh mẽ về hình ảnh và phong cách âm nhạc. Kết hợp giữa chất liệu truyền thống và âm nhạc điện tử hiện đại.
+
+**Dấu ấn gần đây:** Album "Vũ Trụ Cò Bay" (2023) là một cú hích lớn, khẳng định tư duy âm nhạc độc đáo và trưởng thành của Phương Mỹ Chi.
+""")
     st.markdown('</div>', unsafe_allow_html=True)
 
 # --- TAB LỊCH TRÌNH ---
