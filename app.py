@@ -7,40 +7,42 @@ import datetime
 import time
 import random
 import plotly.express as px
-import json
 
 # ==========================================
-# --- 1. CẤU HÌNH DỮ LIỆU ---
+# --- 1. CẤU HÌNH DỮ LIỆU (GIỮ NGUYÊN) ---
 # ==========================================
 SHEET_NAME = 'PMC Data Center'
 VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8'] 
 YOUTUBE_API_KEY = 'AIzaSyAueu53W-r0VWcYJwYrSSboOKuWYQfLn34' 
 
-SCHEDULE_IMAGE_URL = "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=2068&auto=format&fit=crop" 
+# Link ảnh lịch trình (Bạn có thể thay link này bằng ảnh của bạn)
+SCHEDULE_IMAGE_URL = "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=2068&auto=format&fit=crop"
+
 BANNER_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/600369698_1419646709529546_341344486868245985_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeE8R8ouge4yL7lfWGQ5Kzk1Enry68g3cr0SevLryDdyvaWspFlBItEaOUW321Od9poGbHjYncGX9_MS7BEcv6Ww&_nc_ohc=WHolhcYE84IQ7kNvwH3WDS7&_nc_oc=AdlMDmMAztdFXjYHzVG6BJpmRMy1E7qVPlz3DWxOrwo2YrZS0MeRHLPCU2rF4_OdTXE&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=AXvAnGOph6iEFu_TWBD-SA&oh=00_AfoafS9eKG1wduMrKvUIYzK6Mu4ZIs0Q3Idtuj5CW5qvEg&oe=696F8D56"
 AVATAR_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/482242951_1184903749670511_116581152088062484_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHl6z1Zf722SPdydZ2cSXjkZpHk_q-4D51mkeT-r7gPndTlCsa2S-9POMvKIBb4ckII1tv_ascEHrs3kes9q9GO&_nc_ohc=0KAgPDwqVoYQ7kNvwGvYZzT&_nc_oc=AdkiSSI5Nm1z4L60wjOWhF2RlhO42CTckj5fJghrGNCIl1rRcnH9YUwQDlrcIYwvWshnvTSvZ0pqlV2sGzg6tPGG&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=VKwmNPd5x84LUuWGX44UBw&oh=00_AfpI8odqVyRf4fYhFFiablQhci6WR8tZfRwbNfW2uoUEig&oe=696F885F"
 
 SOCIAL_LINKS = {
     "facebook": "https://www.facebook.com/phuongmychi",
-    "spotify": "https://open.spotify.com/artist/1BcjfrXV4Oe3fK0c8dnxFF?si=8adGRTLqQ4SKtELO5P0Xjw",
+    "spotify": "https://open.spotify.com/artist/7z5GfRNo3B8pT2U78S2vE3",
     "youtube": "https://www.youtube.com/channel/UCGRIV5jOtKyAibhjBdIndZQ",
     "instagram": "https://www.instagram.com/phuongmychi/",
     "threads": "https://www.threads.net/@phuongmychi"
 }
 
-INIT_VOTING_DATA = [
-    {"rank": 1, "name": "KINGDOM", "votes": 74854, "change": 9},
-    {"rank": 2, "name": "Flowers", "votes": 54465, "change": 10},
-    {"rank": 3, "name": "CỪU CÓ CÁNH", "votes": 53936, "change": 7},
-    {"rank": 4, "name": "Flash", "votes": 42371, "change": 5},
-    {"rank": 5, "name": "DARLING", "votes": 35888, "change": 4},
-    {"rank": 6, "name": "PiFam", "votes": 32868, "change": 3},
-    {"rank": 7, "name": "MUZIK", "votes": 23310, "change": 4},
-    {"rank": 8, "name": "CARROT", "votes": 23072, "change": 0},
+# Dữ liệu Voting khởi tạo (theo ảnh IMG_20260116_194521_731.jpg)
+INIT_VOTERS = [
+    {"name": "KINGDOM", "votes": 74854},
+    {"name": "Flowers", "votes": 54465},
+    {"name": "CỪU CÓ CÁNH", "votes": 53936},
+    {"name": "Flash", "votes": 42371},
+    {"name": "DARLING", "votes": 35888},
+    {"name": "PiFam", "votes": 32868},
+    {"name": "MUZIK", "votes": 23310},
+    {"name": "CARROT", "votes": 23072}
 ]
 
 # ==========================================
-# --- 2. HÀM XỬ LÝ DỮ LIỆU ---
+# --- 2. CÁC HÀM XỬ LÝ DỮ LIỆU ---
 # ==========================================
 def fetch_video_data_api(video_ids):
     data_map = {}
@@ -49,19 +51,17 @@ def fetch_video_data_api(video_ids):
         request = youtube.videos().list(part="snippet,statistics", id=','.join(video_ids))
         response = request.execute()
         for item in response['items']:
-            vid_id = item['id']
             stats = item['statistics']
             snippet = item['snippet']
+            pub_raw = snippet['publishedAt']
             try:
-                pub_raw = snippet['publishedAt'] 
-                dt = datetime.datetime.strptime(pub_raw, "%Y-%m-%dT%H:%M:%SZ")
-                dt = dt + datetime.timedelta(hours=7)
+                dt = datetime.datetime.strptime(pub_raw, "%Y-%m-%dT%H:%M:%SZ") + datetime.timedelta(hours=7)
                 pub_fmt = dt.strftime("%d/%m/%Y %H:%M")
-            except: pub_fmt = snippet['publishedAt'][:10]
-            data_map[vid_id] = {
+            except: pub_fmt = pub_raw[:10]
+            data_map[item['id']] = {
                 'title': snippet['title'], 'thumb': snippet['thumbnails']['high']['url'],
                 'view': int(stats.get('viewCount', 0)), 'like': int(stats.get('likeCount', 0)),
-                'comment': int(stats.get('commentCount', 0)), 'published': pub_fmt, 'id': vid_id
+                'comment': int(stats.get('commentCount', 0)), 'published': pub_fmt, 'id': item['id']
             }
     except: pass
     return data_map
@@ -76,18 +76,15 @@ def load_sheet_data():
         else:
             creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
         client = gspread.authorize(creds)
-        sheet = client.open(SHEET_NAME)
-        worksheet = sheet.worksheet("Music_Stats")
-        data = worksheet.get_all_records()
-        df = pd.DataFrame(data)
-        if df.empty: return df, None
-        cols_to_fix = ['Youtube_View', 'Youtube_Sub', 'Spotify_Listener', 'TikTok_Follower', 'Facebook_Follower']
-        for col in cols_to_fix:
+        sheet = client.open(SHEET_NAME).worksheet("Music_Stats")
+        df = pd.DataFrame(sheet.get_all_records())
+        cols = ['Youtube_View', 'Youtube_Sub', 'Spotify_Listener', 'TikTok_Follower', 'Facebook_Follower']
+        for col in cols:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col].astype(str).str.replace(',', '').str.replace('.', ''), errors='coerce').fillna(0).astype(int)
         df['Time'] = pd.to_datetime(df['Time'])
         latest = df.iloc[-1].copy()
-        for col in cols_to_fix: 
+        for col in cols:
             if col in df.columns and latest[col] == 0:
                 valid = df[df[col] > 0][col]
                 if not valid.empty: latest[col] = valid.iloc[-1]
@@ -95,24 +92,19 @@ def load_sheet_data():
     except: return pd.DataFrame(), None
 
 # ==========================================
-# --- 3. GIAO DIỆN & CSS (SỬA LỖI HIỂN THỊ) ---
+# --- 3. GIAO DIỆN & CSS (AN TOÀN TUYỆT ĐỐI) ---
 # ==========================================
 st.set_page_config(page_title="Phuong My Chi Official", page_icon="👑", layout="wide")
 
-# CSS TÁCH BIỆT (KHÔNG DÙNG F-STRING)
 st.markdown("""
 <style>
     #MainMenu, header, footer {visibility: hidden;}
     .stApp { background-color: #0E1117; color: #E0E0E0; font-family: sans-serif; }
     .block-container { padding: 0 !important; max-width: 100% !important; }
-
-    /* NAVIGATION */
     .stTabs { background: #0E1117; position: sticky; top: 0; z-index: 999; padding-top: 10px; border-bottom: 1px solid #333; }
     .stTabs [data-baseweb="tab-list"] { justify-content: center; gap: 30px; }
     .stTabs [data-baseweb="tab"] { background: transparent; border: none; color: #AAA; font-weight: 700; font-size: 16px; text-transform: uppercase; }
     .stTabs [aria-selected="true"] { color: #FFF !important; border-bottom: 3px solid #FFD700 !important; }
-
-    /* BANNER */
     .banner-container { width: 100vw; height: 650px; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; overflow: hidden; }
     .banner-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); }
     .profile-section { margin-top: -120px; text-align: center; position: relative; z-index: 10; padding-bottom: 30px; }
@@ -121,50 +113,43 @@ st.markdown("""
     .social-links { display: flex; gap: 20px; justify-content: center; margin-top: 15px; }
     .social-icon svg { fill: #AAA; transition: all 0.3s; }
     .social-icon:hover svg { fill: #FFF; transform: translateY(-3px); }
-
-    /* VIDEO CARD */
-    .video-card { background: #1A1A1A; border-radius: 10px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); border: 1px solid #333; }
+    .video-card { background: #1A1A1A; border-radius: 10px; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
     .vid-thumb-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
-    .vid-thumb { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: 0.3s; }
-    .video-card:hover .vid-thumb { opacity: 1; }
+    .vid-thumb { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.85; }
     .vid-body { padding: 15px; }
     .vid-title { font-size: 15px; font-weight: 700; color: #FFF; text-transform: uppercase; line-height: 1.4; margin-bottom: 4px; height: 42px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
     .vid-artist { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; margin-bottom: 15px; }
     .stat-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 14px; }
-    .stat-label { color: #BBB; font-weight: 500; }
+    .stat-label { color: #BBB; }
     .val-view { color: #64B5F6; font-weight: 700; }
     .val-like { color: #81C784; font-weight: 700; }
     .val-comm { color: #FFD54F; font-weight: 700; }
     .vid-footer { border-top: 1px solid #333; padding-top: 12px; margin-top: 12px; font-size: 11px; color: #666; text-align: right; }
+    
+    /* VOTING UI */
+    .vote-card { background: #FDFBF7; border-radius: 15px; border: 1px solid #DDD; overflow: hidden; color: #333; max-width: 600px; margin: 0 auto;}
+    .vote-head { background: #9575CD; color: white; text-align: center; padding: 15px; font-size: 22px; font-weight: bold; }
+    .vote-row { display: flex; align-items: center; padding: 12px 20px; border-bottom: 1px solid #EEE; }
+    .v-rank { width: 50px; font-weight: bold; color: #F57C00; font-size: 18px; }
+    .v-name { flex-grow: 1; font-weight: bold; font-size: 16px; }
+    .v-total { width: 100px; text-align: right; font-weight: bold; }
+    .v-change { width: 70px; text-align: right; }
+    .badge-p { background: #E8F5E9; color: #2E7D32; padding: 3px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; }
+    .badge-n { background: #F5F5F5; color: #999; padding: 3px 8px; border-radius: 10px; font-size: 12px; }
 
-    /* VOTING TABLE STYLE */
-    .vote-container-wrapper { border-radius: 12px; overflow: hidden; border: 1px solid #DDD; margin-top: 20px;}
-    .vote-header-card { background: #9575CD; color: white; padding: 15px; text-align: center; font-size: 22px; font-weight: bold; }
-    .vote-table-body { background: #FDFBF7; color: #333; }
-    .vote-row-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid #EEE; }
-    .vote-row-item:last-child { border-bottom: none; }
-    .v-rank { width: 40px; font-weight: bold; font-size: 18px; color: #FFA000; }
-    .v-name { flex-grow: 1; font-weight: 600; font-size: 16px; color: #333; }
-    .v-total { width: 120px; text-align: right; font-weight: bold; font-size: 16px; }
-    .v-change { width: 80px; text-align: right; }
-    .badge-p { background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; }
-    .badge-n { background: #F5F5F5; color: #9E9E9E; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; }
-
-    /* FOOTER */
-    .f-box { background: #4A148C; padding: 50px 40px; margin-top: 80px; color: white; border-top: 2px solid #333; }
+    /* FOOTER UI */
+    .f-box { background: #4A148C; padding: 50px 40px; color: white; margin-top: 60px; border-top: 4px solid #311B92; }
     .f-title { font-size: 28px; font-weight: bold; margin-bottom: 10px; }
-    .f-desc { font-size: 14px; color: #E1BEE7; margin-bottom: 30px; line-height: 1.6; }
-    .f-info { background: rgba(0,0,0,0.15); padding: 20px; border-radius: 8px; display: inline-block; margin-bottom: 40px; }
+    .f-desc { font-size: 14px; color: #E1BEE7; margin-bottom: 30px; line-height: 1.6; max-width: 700px;}
+    .f-info-box { background: rgba(0,0,0,0.15); padding: 20px; border-radius: 8px; display: inline-block; margin-bottom: 40px; }
     .f-bottom { border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; font-size: 12px; color: #B39DDB; text-align: center; }
 
-    /* METRIC CARDS */
     .metric-card { background: #16181C; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #333; }
     .metric-val { font-size: 28px; font-weight: 800; color: white; }
     .metric-lbl { font-size: 12px; text-transform: uppercase; color: #888; font-weight: bold; }
     .live-dot { height: 8px; width: 8px; background: #FF4B4B; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
-    .main-content { padding: 0 40px; }
-    .content-spacer { height: 60px; }
     @keyframes blink { 0% {opacity:1} 50% {opacity:0.4} 100% {opacity:1} }
+    .content-spacer { height: 60px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -178,134 +163,69 @@ svg_icons = {
 }
 
 # ==========================================
-# --- 4. KHỞI TẠO STATE ---
+# --- 4. STATE KHỞI TẠO ---
 # ==========================================
-if 'init_done' not in st.session_state:
+if 'init' not in st.session_state:
     df, latest = load_sheet_data()
-    st.session_state['df'] = df
-    st.session_state['latest'] = latest
-    st.session_state['total_view_sim'] = int(latest['Youtube_View']) if latest is not None else 0
-    st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
-    st.session_state['voting_data'] = INIT_VOTING_DATA
-    st.session_state['voting_history'] = []
-    st.session_state['init_done'] = True
-
-if 'voting_data' not in st.session_state: st.session_state['voting_data'] = INIT_VOTING_DATA
-if 'voting_history' not in st.session_state: st.session_state['voting_history'] = []
+    st.session_state.df = df
+    st.session_state.latest = latest
+    st.session_state.total_view_sim = int(latest['Youtube_View']) if latest is not None else 0
+    st.session_state.v_data = fetch_video_data_api(VIDEO_IDS)
+    st.session_state.voting_data = INIT_VOTERS
+    st.session_state.voting_history = []
+    st.session_state.init = True
 
 # ==========================================
-# --- 5. MAIN LAYOUT ---
+# --- 5. MAIN LAYOUT (PLACEHOLDERS) ---
 # ==========================================
-# Banner Section
+# Banner & Profile
 st.markdown('<div class="banner-container"><img src="' + BANNER_URL + '" class="banner-img"></div>', unsafe_allow_html=True)
 st.markdown('<div class="profile-section"><img src="' + AVATAR_URL + '" class="avatar"><div class="artist-name">PHƯƠNG MỸ CHI</div><div style="color:#BBB; margin-top:5px; font-weight:600;">"Cô bé dân ca" ngày nào giờ đã trở thành một biểu tượng âm nhạc trẻ trung, năng động và đầy sáng tạo.</div><div class="social-links"><a href="' + SOCIAL_LINKS["facebook"] + '" target="_blank" class="social-icon">' + svg_icons["facebook"] + '</a><a href="' + SOCIAL_LINKS["instagram"] + '" target="_blank" class="social-icon">' + svg_icons["instagram"] + '</a><a href="' + SOCIAL_LINKS["threads"] + '" target="_blank" class="social-icon">' + svg_icons["threads"] + '</a><a href="' + SOCIAL_LINKS["youtube"] + '" target="_blank" class="social-icon">' + svg_icons["youtube"] + '</a><a href="' + SOCIAL_LINKS["spotify"] + '" target="_blank" class="social-icon">' + svg_icons["spotify"] + '</a></div></div>', unsafe_allow_html=True)
 
-# Navigation
 tab_home, tab_about, tab_schedule, tab_stats, tab_vote = st.tabs(["TRANG CHỦ", "GIỚI THIỆU", "LỊCH TRÌNH", "THỐNG KÊ", "VOTING"])
 
+# Tạo placeholders cho từng tab
 with tab_home:
-    st.markdown('<div class="main-content">### 🔥 REAL-TIME STATISTICS</div>', unsafe_allow_html=True)
-    metrics_placeholder = st.empty()
-    st.markdown('<div class="main-content">### 🎬 LATEST RELEASES</div>', unsafe_allow_html=True)
-    video_placeholder = st.empty()
+    home_metrics = st.empty()
+    home_videos = st.empty()
 
 with tab_about:
-    st.markdown('<div class="content-spacer"></div><div class="main-content">', unsafe_allow_html=True)
+    st.markdown('<div class="content-spacer"></div>', unsafe_allow_html=True)
     c1, c2 = st.columns([1, 2])
     with c1: st.image(AVATAR_URL, width=300)
-    with c2:
-        st.markdown("### PHƯƠNG MỸ CHI\n**Phương Mỹ Chi** (sinh năm 2003) là một nữ ca sĩ nổi tiếng Việt Nam, được biết đến rộng rãi sau khi đạt danh hiệu Á quân chương trình *Giọng hát Việt nhí* mùa đầu tiên (2013).\n\n* **2013:** Á quân The Voice Kids Vietnam.\n* **2014-2020:** Theo đuổi dòng nhạc dân ca.\n* **2022-Nay:** Lột xác mạnh mẽ với nhạc điện tử đương đại.\n\n**Dấu ấn gần đây:** Album 'Vũ Trụ Cò Bay' (2023) khẳng định tư duy âm nhạc trưởng thành.")
-    st.markdown('</div>', unsafe_allow_html=True)
+    with c2: st.markdown("### PHƯƠNG MỸ CHI\n**Phương Mỹ Chi** (sinh năm 2003) là một nữ ca sĩ nổi tiếng Việt Nam, được biết đến rộng rãi sau khi đạt danh hiệu Á quân chương trình *Giọng hát Việt nhí* mùa đầu tiên (2013).\n\n* **2013:** Á quân The Voice Kids Vietnam.\n* **2014-2020:** Theo đuổi dòng nhạc dân ca.\n* **2022-Nay:** Lột xác mạnh mẽ với nhạc điện tử đương đại.\n\n**Dấu ấn gần đây:** Album 'Vũ Trụ Cò Bay' (2023) khẳng định tư duy âm nhạc trưởng thành.")
 
 with tab_schedule:
-    st.markdown('<div class="content-spacer"></div><div class="main-content">### 📅 LỊCH TRÌNH HOẠT ĐỘNG</div>', unsafe_allow_html=True)
-    st.image(SCHEDULE_IMAGE_URL, use_column_width=True, caption="Lịch trình PMC")
+    st.markdown('<div class="content-spacer"></div>', unsafe_allow_html=True)
+    st.markdown("### 📅 LỊCH TRÌNH HOẠT ĐỘNG")
+    st.image(SCHEDULE_IMAGE_URL, use_column_width=True)
 
 with tab_stats:
-    st.markdown('<div class="content-spacer"></div><div class="main-content">', unsafe_allow_html=True)
-    if 'df' in st.session_state and not st.session_state['df'].empty:
-        df_chart = st.session_state['df'].copy()
-        options = ['Youtube_View', 'Youtube_Sub', 'Spotify_Listener', 'TikTok_Follower', 'Facebook_Follower']
-        selected = st.multiselect("Chọn chỉ số hiển thị:", options, default=options)
-        if selected:
-            fig = px.line(df_chart, x='Time', y=selected, title='Tăng trưởng đa nền tảng')
-            fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', font_color='#ccc', xaxis=dict(showgrid=False), yaxis=dict(showgrid=True, gridcolor='#333'), legend=dict(orientation="h", y=1.1))
-            st.plotly_chart(fig, use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('<div class="content-spacer"></div>', unsafe_allow_html=True)
+    stats_chart_placeholder = st.empty()
 
 with tab_vote:
-    st.markdown('<div class="content-spacer"></div><div class="main-content">', unsafe_allow_html=True)
+    st.markdown('<div class="content-spacer"></div>', unsafe_allow_html=True)
     vote_table_placeholder = st.empty()
-    st.write("") 
     vote_chart_placeholder = st.empty()
-    st.markdown('</div>', unsafe_allow_html=True)
 
-# FOOTER PLACEHOLDER (CỰC KỲ QUAN TRỌNG)
+# PLACEHOLDER CHÂN TRANG (FOOTER)
 footer_placeholder = st.empty()
 
 # ==========================================
-# --- 6. LOOP & RENDER ---
+# --- 6. VÒNG LẶP REAL-TIME ---
 # ==========================================
 while True:
-    st.session_state['total_view_sim'] += random.randint(1, 15)
-    for item in st.session_state['voting_data']:
-        inc = random.randint(0, 3) 
+    # 1. Update số liệu
+    st.session_state.total_view_sim += random.randint(1, 15)
+    for item in st.session_state.voting_data:
+        inc = random.randint(0, 3)
         item['votes'] += inc
-        item['change'] = inc 
-    st.session_state['voting_data'] = sorted(st.session_state['voting_data'], key=lambda x: x['votes'], reverse=True)
-    for i, item in enumerate(st.session_state['voting_data']): item['rank'] = i + 1
-    current_time = datetime.datetime.now()
-    history_point = {"Time": current_time.strftime("%H:%M:%S")}
-    for item in st.session_state['voting_data']: history_point[item['name']] = item['votes']
-    st.session_state['voting_history'].append(history_point)
-    if len(st.session_state['voting_history']) > 30: st.session_state['voting_history'].pop(0)
-
-    if int(time.time()) % 60 == 0:
-        df_new, latest_new = load_sheet_data()
-        if latest_new is not None:
-            st.session_state['latest'] = latest_new
-            if int(latest_new['Youtube_View']) > st.session_state['total_view_sim']: st.session_state['total_view_sim'] = int(latest_new['Youtube_View'])
-        st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
-
-    # Render Stats
-    lat = st.session_state['latest']
-    if lat is not None:
-        with metrics_placeholder.container():
-            c1, c2, c3, c4 = st.columns(4)
-            c1.markdown('<div class="metric-card"><div class="metric-lbl">TOTAL VIEWS <span class="live-dot"></span></div><div class="metric-val" style="color:#FF4B4B">' + "{:,}".format(st.session_state['total_view_sim']) + '</div></div>', unsafe_allow_html=True)
-            c2.markdown('<div class="metric-card"><div class="metric-lbl">SUBSCRIBERS</div><div class="metric-val">' + "{:,}".format(lat['Youtube_Sub']) + '</div></div>', unsafe_allow_html=True)
-            c3.markdown('<div class="metric-card"><div class="metric-lbl">TIKTOK FANS</div><div class="metric-val">' + "{:,}".format(lat['TikTok_Follower']) + '</div></div>', unsafe_allow_html=True)
-            c4.markdown('<div class="metric-card"><div class="metric-lbl">SPOTIFY</div><div class="metric-val" style="color:#1DB954">' + "{:,}".format(lat['Spotify_Listener']) + '</div></div>', unsafe_allow_html=True)
-
-        with video_placeholder.container():
-            cols = st.columns(3)
-            v_data = st.session_state['video_data']
-            for i, vid_id in enumerate(VIDEO_IDS):
-                if vid_id in v_data:
-                    d = v_data[vid_id]
-                    with cols[i % 3]:
-                        st.markdown('<div class="video-card"><a href="https://www.youtube.com/watch?v=' + d['id'] + '" target="_blank"><div class="vid-thumb-wrapper"><img src="' + d['thumb'] + '" class="vid-thumb"></div></a><div class="vid-body"><div class="vid-title">' + d['title'] + '</div><div class="vid-artist">PHƯƠNG MỸ CHI</div><div class="stat-row"><span class="stat-label">Lượt xem:</span><span class="val-view">' + "{:,}".format(d['view']) + '</span></div><div class="stat-row"><span class="stat-label">Lượt thích:</span><span class="val-like">' + "{:,}".format(d['like']) + '</span></div><div class="stat-row"><span class="stat-label">Bình luận:</span><span class="val-comm">' + "{:,}".format(d['comment']) + '</span></div><div class="vid-footer">Thêm vào: ' + d['published'] + '</div></div></div>', unsafe_allow_html=True)
-
-    # Render Voting
-    with vote_table_placeholder.container():
-        rows_html = ""
-        for item in st.session_state['voting_data']:
-            change_cls = "badge-p" if item['change'] > 0 else "badge-n"
-            change_txt = "+" + str(item['change']) if item['change'] > 0 else "0"
-            rows_html += '<div class="vote-row-item"><div class="col-rank">#' + str(item['rank']) + '</div><div class="col-name">' + item['name'] + '</div><div class="col-total">' + "{:,}".format(item['votes']) + '</div><div class="col-change"><span class="' + change_cls + '">' + change_txt + '</span></div></div>'
-        st.markdown('<div class="vote-table"><div class="vote-header-card">Best Fandom Forever</div><div class="vote-row-item" style="border-bottom:2px solid #DDD;"><div class="col-rank" style="font-size:14px; color:#999;">HẠNG</div><div class="col-name" style="font-size:14px; color:#999;">ỨNG VIÊN</div><div class="col-total" style="font-size:14px; color:#999;">TỔNG</div><div class="col-change" style="font-size:14px; color:#999;">THAY ĐỔI</div></div>' + rows_html + '</div>', unsafe_allow_html=True)
-
-    with vote_chart_placeholder.container():
-        if len(st.session_state['voting_history']) > 2:
-            st.markdown("#### 📈 DIỄN BIẾN ĐƯỜNG ĐUA")
-            df_hist = pd.DataFrame(st.session_state['voting_history'])
-            df_melt = df_hist.melt(id_vars=['Time'], var_name='Candidate', value_name='Votes')
-            fig = px.line(df_melt, x='Time', y='Votes', color='Candidate')
-            fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', font_color='#ccc')
-            st.plotly_chart(fig, use_container_width=True)
-
-    # Render Footer
-    with footer_placeholder.container():
-        st.markdown('<div class="footer-container"><div class="footer-title">WeYoung Tracker</div><div class="footer-desc">Hệ thống theo dõi và phân tích bình chọn cho giải thưởng WeYoung 2025 - WeYoung by WeChoice Awards. Truy cập trang web giải thưởng để bình chọn.</div><div class="f-info"><div style="font-weight:bold; margin-bottom:5px;">Thông tin</div><div class="footer-text">• Dữ liệu được cập nhật trực tiếp từ hệ thống định kỳ mỗi 10 giây.</div><div class="footer-text">• Đồng thời ghi nhận lại mỗi 10 phút để phân tích và dự đoán.</div></div><div class="f-bottom">© Bản quyền giải thưởng thuộc về Công ty cổ phần VCCorp.<br>Phát triển độc lập bởi người hâm mộ chương trình ATVNCG.<br><span class="hashtag">#camonvidaden</span></div></div>', unsafe_allow_html=True)
-
-    time.sleep(1)
+        item['change'] = inc
+    st.session_state.voting_data = sorted(st.session_state.voting_data, key=lambda x: x['votes'], reverse=True)
+    
+    current_time = datetime.datetime.now().strftime("%H:%M:%S")
+    history_point = {"Time": current_time}
+    for item in st.session_state.voting_data: history_point[item['name']] = item['votes']
+    st.session_state.voting_history.append(history_point)
+    if len(st.session_state.voting_history) > 30: st.session_state.voting_
