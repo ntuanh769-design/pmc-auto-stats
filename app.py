@@ -27,12 +27,11 @@ SOCIAL_LINKS = {
     "threads": "https://www.threads.net/@phuongmychi"
 }
 
-# --- DỮ LIỆU GIẢ LẬP CHO TAB VOTING ---
-# (Bạn có thể sửa tên đối thủ và số vote ban đầu tại đây)
+# Dữ liệu giả lập Voting
 VOTING_CATEGORIES = {
     "Nữ Ca Sĩ Của Năm": [
         {"name": "Phương Mỹ Chi", "votes": 15420, "color": "#FFD700", "img": AVATAR_URL},
-        {"name": "Hòa Minzy", "votes": 12300, "color": "#C0C0C0", "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/640px-Image_created_with_a_mobile_phone.png"}, # Placeholder image
+        {"name": "Hòa Minzy", "votes": 12300, "color": "#C0C0C0", "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/640px-Image_created_with_a_mobile_phone.png"},
         {"name": "Hoàng Thùy Linh", "votes": 11500, "color": "#CD7F32", "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/640px-Image_created_with_a_mobile_phone.png"},
         {"name": "tlinh", "votes": 9800, "color": "#444", "img": ""},
         {"name": "Văn Mai Hương", "votes": 8500, "color": "#444", "img": ""}
@@ -45,7 +44,7 @@ VOTING_CATEGORIES = {
 }
 
 # ==========================================
-# --- 2. HÀM XỬ LÝ SỐ LIỆU ---
+# --- 2. HÀM XỬ LÝ SỐ LIỆU (CÓ FIX TIKTOK = 0) ---
 # ==========================================
 def fetch_video_data_api(video_ids):
     data_map = {}
@@ -98,15 +97,31 @@ def load_sheet_data():
         df = pd.DataFrame(data)
         if df.empty: return df, None
 
+        # Chuyển đổi số liệu thành dạng số
         cols_to_fix = ['Youtube_View', 'Youtube_Sub', 'Spotify_Listener', 'TikTok_Follower', 'Facebook_Follower']
         for col in cols_to_fix:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col].astype(str).str.replace(',', '').str.replace('.', ''), errors='coerce').fillna(0).astype(int)
         
         df['Time'] = pd.to_datetime(df['Time'])
-        latest = df.iloc[-1]
+        
+        # --- THUẬT TOÁN FIX LỖI SỐ 0 (TIKTOK/FACEBOOK) ---
+        # Thay vì chỉ lấy dòng cuối (iloc[-1]), ta lấy dòng cuối, 
+        # nhưng nếu cột nào bằng 0 thì tìm ngược về quá khứ để lấy số gần nhất > 0.
+        latest = df.iloc[-1].copy()
+        
+        for col in cols_to_fix:
+            if col in df.columns and latest[col] == 0:
+                # Lọc ra các dòng có giá trị > 0 của cột này
+                valid_values = df[df[col] > 0][col]
+                if not valid_values.empty:
+                    # Lấy giá trị hợp lệ mới nhất
+                    latest[col] = valid_values.iloc[-1]
+        
         return df, latest
-    except: return pd.DataFrame(), None
+    except Exception as e: 
+        print(e)
+        return pd.DataFrame(), None
 
 # ==========================================
 # --- 3. CSS TÙY CHỈNH ---
@@ -115,28 +130,29 @@ st.set_page_config(page_title="Phuong My Chi Official", page_icon="👑", layout
 
 st.markdown("""
 <style>
-    /* RESET */
+    /* RESET & LAYOUT */
     #MainMenu, header, footer {visibility: hidden;}
     .stApp { background-color: #0E1117; color: #E0E0E0; font-family: sans-serif; }
     .block-container { padding: 0 !important; max-width: 100% !important; }
 
-    /* NAVIGATION */
+    /* NAVIGATION (STICKY) */
     .stTabs { background: #0E1117; position: sticky; top: 0; z-index: 999; padding-top: 10px; border-bottom: 1px solid #333; }
     .stTabs [data-baseweb="tab-list"] { justify-content: center; gap: 30px; }
     .stTabs [data-baseweb="tab"] { background: transparent; border: none; color: #AAA; font-weight: 700; font-size: 16px; text-transform: uppercase; }
     .stTabs [aria-selected="true"] { color: #FFF !important; border-bottom: 3px solid #FFD700 !important; }
 
     /* BANNER */
-    .banner-container { width: 100vw; height: 500px; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; overflow: hidden; }
+    .banner-container { width: 100vw; height: 650px; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; overflow: hidden; }
     .banner-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); }
     .profile-section { margin-top: -120px; text-align: center; position: relative; z-index: 10; padding-bottom: 30px; }
     .avatar { border-radius: 50%; width: 160px; height: 160px; object-fit: cover; border: 4px solid #FFD700; background: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.6); }
     .artist-name { font-size: 48px; font-weight: 900; color: #FFF; margin: 10px 0 0 0; }
+    
     .social-links { display: flex; gap: 20px; justify-content: center; margin-top: 15px; }
     .social-icon svg { fill: #AAA; transition: all 0.3s; }
     .social-icon:hover svg { fill: #FFF; transform: translateY(-3px); }
 
-    /* VIDEO CARD (Dọc) */
+    /* VIDEO CARD */
     .video-card { background: #1A1A1A; border-radius: 10px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); border: 1px solid #333; }
     .vid-thumb-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
     .vid-thumb { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: 0.3s; }
@@ -151,7 +167,7 @@ st.markdown("""
     .val-comm { color: #FFD54F; font-weight: 700; }
     .vid-footer { border-top: 1px solid #333; padding-top: 12px; margin-top: 12px; font-size: 11px; color: #666; text-align: right; }
 
-    /* VOTING STYLES (MỚI THÊM) */
+    /* VOTING STYLES */
     .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 20px; margin-bottom: 40px; padding-top: 20px; }
     .podium-item { text-align: center; width: 120px; transition: transform 0.3s; }
     .podium-item:hover { transform: translateY(-10px); }
@@ -160,7 +176,6 @@ st.markdown("""
     .podium-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid white; margin-bottom: 10px; }
     .podium-name { font-weight: bold; font-size: 14px; margin-top: 10px; color: #FFF; }
     .podium-votes { font-size: 12px; color: #AAA; }
-    
     .rank-list-item { background: #1A1F26; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #333; }
     .rank-num { font-size: 24px; font-weight: bold; width: 40px; color: #666; }
     .rank-info { flex-grow: 1; margin-left: 10px; }
@@ -173,18 +188,25 @@ st.markdown("""
     .metric-val { font-size: 28px; font-weight: 800; color: white; }
     .metric-lbl { font-size: 12px; text-transform: uppercase; color: #888; font-weight: bold; }
     .live-dot { height: 8px; width: 8px; background: #FF4B4B; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
+    
     .main-content { padding: 0 40px; }
+    
+    /* SPACER FOR CONTENT BELOW STICKY HEADER */
+    .content-spacer { height: 60px; }
+
     .calendar-container { background: #1A1F26; padding: 25px; border-radius: 20px; max-width: 800px; margin: 0 auto; border: 1px solid #333; }
     .cal-header { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px; color: white; }
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center; }
     .cal-cell { background: #242B35; color: white; padding: 15px 0; border-radius: 10px; font-weight: bold; cursor: pointer; }
     .cal-cell:hover { background: #FFD700; color: black; }
     .cal-head { color: #888; font-weight: bold; padding-bottom: 10px; }
+    
     .footer-container { background: #000; padding: 50px; margin-top: 50px; border-top: 1px solid #222; }
     .footer-content { display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto; }
     .footer-left h3, .footer-right h3 { color: white; margin-bottom: 10px; }
     .footer-left p, .footer-right p { color: #888; font-size: 14px; }
     .copyright { text-align: center; border-top: 1px solid #222; padding-top: 20px; margin-top: 30px; color: #555; font-size: 12px; }
+    
     @keyframes blink { 0% {opacity:1} 50% {opacity:0.4} 100% {opacity:1} }
 </style>
 """, unsafe_allow_html=True)
@@ -205,9 +227,10 @@ if 'init_done' not in st.session_state:
     df, latest = load_sheet_data()
     st.session_state['df'] = df
     st.session_state['latest'] = latest
-    st.session_state['total_view_sim'] = int(latest['Youtube_View']) if latest is not None else 0
+    # Khởi tạo số view tổng ảo từ số thật
+    real_val = int(latest['Youtube_View']) if latest is not None else 0
+    st.session_state['total_view_sim'] = real_val
     st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
-    # Khởi tạo dữ liệu voting giả lập
     st.session_state['voting_sim'] = VOTING_CATEGORIES
     st.session_state['init_done'] = True
 
@@ -242,11 +265,12 @@ with tab_home:
 
 # --- TAB GIỚI THIỆU ---
 with tab_about:
-    st.markdown('<div class="main-content" style="margin-top:40px">', unsafe_allow_html=True)
+    # Spacer để tránh bị header che
+    st.markdown('<div class="content-spacer"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-content">', unsafe_allow_html=True)
     c1, c2 = st.columns([1, 2])
     with c1: st.image(AVATAR_URL, width=300)
     with c2:
-        # LƯU Ý: Nội dung bên dưới phải nằm sát lề trái
         st.markdown("""
 ### PHƯƠNG MỸ CHI
 **Phương Mỹ Chi** (sinh năm 2003) là một nữ ca sĩ nổi tiếng Việt Nam, được biết đến rộng rãi sau khi đạt danh hiệu Á quân chương trình *Giọng hát Việt nhí* mùa đầu tiên (2013).
@@ -261,8 +285,8 @@ with tab_about:
 
 # --- TAB LỊCH TRÌNH ---
 with tab_schedule:
-    st.markdown('<div class="main-content" style="margin-top:40px">', unsafe_allow_html=True)
-    # QUAN TRỌNG: HTML không thụt dòng để tránh lỗi hiển thị code block
+    st.markdown('<div class="content-spacer"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-content">', unsafe_allow_html=True)
     st.markdown("""
 <div class="calendar-container">
 <div class="cal-header">January 2026</div>
@@ -281,7 +305,8 @@ with tab_schedule:
 
 # --- TAB THỐNG KÊ ---
 with tab_stats:
-    st.markdown('<div class="main-content" style="margin-top:40px">', unsafe_allow_html=True)
+    st.markdown('<div class="content-spacer"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-content">', unsafe_allow_html=True)
     if 'df' in st.session_state and not st.session_state['df'].empty:
         df_chart = st.session_state['df'].copy()
         options = ['Youtube_View', 'Youtube_Sub', 'Spotify_Listener', 'TikTok_Follower', 'Facebook_Follower']
@@ -298,14 +323,12 @@ with tab_stats:
         st.info("Đang tải dữ liệu...")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TAB VOTING (ĐÃ XÂY DỰNG NỘI DUNG MỚI) ---
+# --- TAB VOTING ---
 with tab_vote:
-    st.markdown('<div class="main-content" style="margin-top:40px">', unsafe_allow_html=True)
+    st.markdown('<div class="content-spacer"></div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-content">', unsafe_allow_html=True)
     
-    # 1. Selector Hạng Mục
     vote_cat = st.selectbox("CHỌN HẠNG MỤC BÌNH CHỌN:", list(VOTING_CATEGORIES.keys()))
-    
-    # Placeholder để update số liệu giả lập
     vote_content = st.empty()
     
     st.markdown('</div>', unsafe_allow_html=True)
@@ -314,15 +337,13 @@ with tab_vote:
 # --- 6. LOOP & RENDER ---
 # ==========================================
 while True:
-    # 1. Update số liệu ảo cho Home
     st.session_state['total_view_sim'] += random.randint(1, 15)
     
-    # 2. Update số liệu ảo cho Voting (Tăng ngẫu nhiên)
+    # Update Voting Sim
     for cat in st.session_state['voting_sim']:
-        for candidate in st.session_state['voting_sim'][cat]:
-            candidate['votes'] += random.randint(0, 5) # Tăng 0-5 vote mỗi giây
-            
-    # 3. Sync API (Mỗi 60s)
+        for cand in st.session_state['voting_sim'][cat]:
+            cand['votes'] += random.randint(0, 5)
+
     if int(time.time()) % 60 == 0:
         df_new, latest_new = load_sheet_data()
         if latest_new is not None:
@@ -331,14 +352,16 @@ while True:
                 st.session_state['total_view_sim'] = int(latest_new['Youtube_View'])
         st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
 
-    # 4. Render Home Data
+    # Render Home
     lat = st.session_state['latest']
     if lat is not None:
         with metrics_placeholder.container():
             c1, c2, c3, c4 = st.columns(4)
             c1.markdown(f"""<div class="metric-card"><div class="metric-lbl">TOTAL VIEWS <span class="live-dot"></span></div><div class="metric-val" style="color:#FF4B4B">{st.session_state['total_view_sim']:,}</div></div>""", unsafe_allow_html=True)
             c2.markdown(f"""<div class="metric-card"><div class="metric-lbl">SUBSCRIBERS</div><div class="metric-val">{lat['Youtube_Sub']:,}</div></div>""", unsafe_allow_html=True)
-            c3.markdown(f"""<div class="metric-card"><div class="metric-lbl">TIKTOK FANS</div><div class="metric-val">{lat['TikTok_Follower']:,}</div></div>""", unsafe_allow_html=True)
+            # TikTok check 0
+            tt_val = lat['TikTok_Follower']
+            c3.markdown(f"""<div class="metric-card"><div class="metric-lbl">TIKTOK FANS</div><div class="metric-val">{tt_val:,}</div></div>""", unsafe_allow_html=True)
             c4.markdown(f"""<div class="metric-card"><div class="metric-lbl">SPOTIFY</div><div class="metric-val" style="color:#1DB954">{lat['Spotify_Listener']:,}</div></div>""", unsafe_allow_html=True)
 
         with video_placeholder.container():
@@ -364,20 +387,13 @@ while True:
 </div>
 """, unsafe_allow_html=True)
 
-    # 5. Render Voting Data (Real-time Simulation)
-    # Lấy dữ liệu hạng mục hiện tại
-    # Lưu ý: Trong vòng lặp while True, st.selectbox không tự cập nhật giá trị biến vote_cat ngay lập tức nếu UI bị block.
-    # Nhưng ta cứ render dựa trên giá trị hiện tại.
+    # Render Voting
     current_cat_data = st.session_state['voting_sim'][vote_cat]
-    # Sắp xếp lại theo vote giảm dần
     sorted_candidates = sorted(current_cat_data, key=lambda x: x['votes'], reverse=True)
     
     with vote_content.container():
-        # Top 3 Podium
         if len(sorted_candidates) >= 3:
-            top1 = sorted_candidates[0]
-            top2 = sorted_candidates[1]
-            top3 = sorted_candidates[2]
+            top1, top2, top3 = sorted_candidates[0], sorted_candidates[1], sorted_candidates[2]
             
             st.markdown(f"""
             <div class="podium-container">
@@ -406,10 +422,8 @@ while True:
             <br>
             """, unsafe_allow_html=True)
             
-            # List Rank 4+
             for i, cand in enumerate(sorted_candidates[3:]):
                 rank = i + 4
-                # Tính % để vẽ thanh bar
                 max_vote = top1['votes']
                 percent = (cand['votes'] / max_vote) * 100
                 st.markdown(f"""
@@ -423,15 +437,12 @@ while True:
                 </div>
                 """, unsafe_allow_html=True)
                 
-            # Biểu đồ diễn biến (Giả lập)
-            # Tạo dữ liệu lịch sử giả cho biểu đồ
             st.markdown("#### 📈 DIỄN BIẾN BÌNH CHỌN (24H QUA)")
             chart_data = []
             now = datetime.datetime.now()
-            for cand in sorted_candidates[:3]: # Chỉ vẽ top 3
+            for cand in sorted_candidates[:3]:
                 for h in range(10):
                     time_point = now - datetime.timedelta(hours=10-h)
-                    # Giả lập vote tăng dần
                     sim_vote = cand['votes'] - (10-h) * random.randint(100, 500)
                     chart_data.append({"Time": time_point, "Candidate": cand['name'], "Votes": sim_vote})
             
