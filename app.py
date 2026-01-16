@@ -10,14 +10,15 @@ import plotly.express as px
 import json
 
 # ==========================================
-# --- CẤU HÌNH (GIỮ NGUYÊN) ---
+# --- CẤU HÌNH (GIỮ NGUYÊN CODE LẤY SỐ LIỆU) ---
 # ==========================================
 SHEET_NAME = 'PMC Data Center'
-VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8'] # Thay ID của bạn
+VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8'] 
 YOUTUBE_API_KEY = 'AIzaSyAueu53W-r0VWcYJwYrSSboOKuWYQfLn34' 
 
 # Link ảnh và Mạng xã hội
-BANNER_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/600369698_1419646709529546_341344486868245985_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeE8R8ouge4yL7lfWGQ5Kzk1Enry68g3cr0SevLryDdyvaWspFlBItEaOUW321Od9poGbHjYncGX9_MS7BEcv6Ww&_nc_ohc=WHolhcYE84IQ7kNvwH3WDS7&_nc_oc=AdlMDmMAztdFXjYHzVG6BJpmRMy1E7qVPlz3DWxOrwo2YrZS0MeRHLPCU2rF4_OdTXE&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=AXvAnGOph6iEFu_TWBD-SA&oh=00_AfoafS9eKG1wduMrKvUIYzK6Mu4ZIs0Q3Idtuj5CW5qvEg&oe=696F8D56" # Ảnh bìa Concert
+# Ảnh bìa Concert to đẹp
+ANNER_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/600369698_1419646709529546_341344486868245985_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeE8R8ouge4yL7lfWGQ5Kzk1Enry68g3cr0SevLryDdyvaWspFlBItEaOUW321Od9poGbHjYncGX9_MS7BEcv6Ww&_nc_ohc=WHolhcYE84IQ7kNvwH3WDS7&_nc_oc=AdlMDmMAztdFXjYHzVG6BJpmRMy1E7qVPlz3DWxOrwo2YrZS0MeRHLPCU2rF4_OdTXE&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=AXvAnGOph6iEFu_TWBD-SA&oh=00_AfoafS9eKG1wduMrKvUIYzK6Mu4ZIs0Q3Idtuj5CW5qvEg&oe=696F8D56" # Ảnh bìa Concert
 AVATAR_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/482242951_1184903749670511_116581152088062484_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHl6z1Zf722SPdydZ2cSXjkZpHk_q-4D51mkeT-r7gPndTlCsa2S-9POMvKIBb4ckII1tv_ascEHrs3kes9q9GO&_nc_ohc=0KAgPDwqVoYQ7kNvwGvYZzT&_nc_oc=AdkiSSI5Nm1z4L60wjOWhF2RlhO42CTckj5fJghrGNCIl1rRcnH9YUwQDlrcIYwvWshnvTSvZ0pqlV2sGzg6tPGG&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=VKwmNPd5x84LUuWGX44UBw&oh=00_AfpI8odqVyRf4fYhFFiablQhci6WR8tZfRwbNfW2uoUEig&oe=696F885F" # Ảnh Avatar kênh
 SOCIAL_LINKS = {
     "facebook": "https://www.facebook.com/phuongmychi",
@@ -30,7 +31,6 @@ SOCIAL_LINKS = {
 # ==========================================
 # --- CÁC HÀM XỬ LÝ SỐ LIỆU (GIỮ NGUYÊN) ---
 # ==========================================
-# --- HÀM 1: LẤY DATA VIDEO (API) ---
 def fetch_video_data_api(video_ids):
     data_map = {}
     try:
@@ -55,7 +55,6 @@ def fetch_video_data_api(video_ids):
     except: pass
     return data_map
 
-# --- HÀM 2: LẤY DATA TỔNG (SHEET) ---
 def load_sheet_data():
     try:
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -85,11 +84,11 @@ def load_sheet_data():
     except: return pd.DataFrame(), None
 
 # ==========================================
-# --- GIAO DIỆN & CSS (THAY ĐỔI LỚN) ---
+# --- GIAO DIỆN & CSS (UPDATED) ---
 # ==========================================
 st.set_page_config(page_title="Phuong My Chi Official", page_icon="👑", layout="wide")
 
-# --- SVG ICONS (Monochrome Style) ---
+# --- SVG ICONS ---
 svg_icons = {
     "facebook": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5z"/></svg>""",
     "spotify": """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.434-5.305-1.758-8.78-1.022-.328.084-.65-.133-.73-.463-.085-.33.133-.65.463-.73 3.81-.808 7.075-.44 9.7 1.15.293.18.385.563.206.857zm1.228-2.727c-.226.366-.696.482-1.06.26-2.687-1.652-6.785-2.13-9.965-1.164-.41.122-.835-.126-.96-.533-.122-.41.126-.835.533-.96 3.617-1.1 8.205-.557 11.302 1.345.365.225.482.694.26 1.06zm.11-2.786c-3.22-1.91-8.53-2.088-11.596-1.143-.467.146-.976-.105-1.123-.573-.146-.47.105-.977.573-1.124 3.57-1.1 9.46-.88 13.146 1.31.42.245.553.792.308 1.21-.246.42-.793.553-1.21.308z"/></svg>""",
@@ -101,330 +100,359 @@ svg_icons = {
 # --- CSS TÙY CHỈNH ---
 st.markdown("""
 <style>
-    /* === CÀI ĐẶT CHUNG === */
+    /* 1. CẤU HÌNH CHUNG */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+    header {visibility: hidden;} /* Ẩn header mặc định của Streamlit */
+    
     .stApp { 
-        background-color: #0E1117; /* Nền tối chủ đạo */
-        color: #E0E0E0; /* Màu chữ sáng */
+        background-color: #0E1117; 
+        color: #E0E0E0; 
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
-    a { text-decoration: none; transition: all 0.3s ease; }
-
-    /* === HEADER & NAVIGATION === */
-    .banner-container {
-        width: 100%; height: 350px; overflow: hidden;
-        border-radius: 0 0 30px 30px; margin-bottom: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        position: relative;
-    }
-    .banner-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); }
-    .banner-overlay {
-        position: absolute; bottom: 0; left: 0; width: 100%;
-        background: linear-gradient(to top, #0E1117, transparent);
-        height: 150px;
+    .block-container {
+        padding-top: 0px !important; /* Đẩy nội dung lên sát mép trên */
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        max-width: 100% !important;
     }
 
-    .profile-section { 
-        display: flex; flex-direction: column; align-items: center; text-align: center;
-        margin-top: -80px; position: relative; z-index: 10; padding-bottom: 30px;
+    /* 2. NAVIGATION TABS (STICKY TOP) */
+    .stTabs {
+        background-color: #0E1117;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding-top: 10px;
+        border-bottom: 1px solid #333;
+        width: 100%;
     }
-    .avatar { 
-        border-radius: 50%; width: 150px; height: 150px; object-fit: cover;
-        border: 4px solid #FFD700; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        margin-bottom: 15px;
-    }
-    .artist-name { font-size: 38px; font-weight: 800; margin: 0; color: #FFFFFF; letter-spacing: 1px; }
-    .artist-bio { color: #B0B0B0; font-size: 16px; margin: 10px 0 20px 0; max-width: 600px; }
-    
-    /* Social Icons (Monochrome) */
-    .social-links { display: flex; gap: 20px; justify-content: center; margin-top: 15px; }
-    .social-icon svg { 
-        fill: #AAAAAA; /* Màu xám mặc định */
-        transition: fill 0.3s ease, transform 0.3s ease;
-    }
-    .social-icon:hover svg { 
-        fill: #FFFFFF; /* Màu trắng khi hover */
-        transform: translateY(-3px);
-    }
-
-    /* Style cho Tabs của Streamlit */
     .stTabs [data-baseweb="tab-list"] {
         justify-content: center;
-        background-color: transparent;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #333;
+        gap: 20px;
     }
     .stTabs [data-baseweb="tab"] {
-        height: 50px; white-space: pre-wrap;
         background-color: transparent;
-        border: none; color: #AAAAAA;
-        font-weight: 600; font-size: 16px;
+        border: none;
+        color: #AAAAAA;
+        font-weight: 700;
+        font-size: 16px;
+        text-transform: uppercase;
     }
     .stTabs [aria-selected="true"] {
-        color: #FFD700 !important; /* Màu vàng khi active */
+        color: #FFFFFF !important;
         border-bottom: 3px solid #FFD700 !important;
     }
 
-    /* === CARD SỐ LIỆU TỔNG (METRICS) === */
-    .metric-card { 
-        background: linear-gradient(145deg, #1A1F26, #12151A);
-        padding: 25px 20px; border-radius: 20px; text-align: center; 
-        border: 1px solid #2A2F38; 
-        box-shadow: 5px 5px 15px rgba(0,0,0,0.3), -5px -5px 15px rgba(255,255,255,0.02);
-        transition: transform 0.3s ease;
+    /* 3. BANNER FULL WIDTH (TRÀN MÀN HÌNH) */
+    .banner-container {
+        width: 100vw; /* Chiều rộng viewport */
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        height: 450px; /* Tăng chiều cao Banner */
+        overflow: hidden;
+        margin-bottom: 0px;
     }
-    .metric-card:hover { transform: translateY(-5px); border-color: #FFD700; }
-    .metric-val { font-size: 32px; font-weight: 800; color: white; margin-top: 10px; }
-    .metric-lbl { font-size: 13px; text-transform: uppercase; letter-spacing: 1.2px; color: #888; font-weight: 600; }
+    .banner-img { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: cover; 
+        filter: brightness(0.7); /* Làm tối banner một chút để nổi bật avatar */
+    }
+
+    /* 4. PROFILE SECTION (AVATAR ĐÈ LÊN BANNER) */
+    .profile-section { 
+        position: relative;
+        margin-top: -100px; /* Kéo avatar lên đè vào banner */
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        text-align: center;
+        z-index: 10;
+        padding-bottom: 20px;
+    }
+    .avatar { 
+        border-radius: 50%; 
+        width: 180px; height: 180px; 
+        object-fit: cover;
+        border: 4px solid #FFD700; 
+        box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+        margin-bottom: 15px;
+        background-color: #000;
+    }
+    .artist-name { font-size: 42px; font-weight: 900; margin: 0; color: #FFFFFF; letter-spacing: 1px; }
+    .artist-bio { color: #B0B0B0; font-size: 16px; margin: 5px 0 15px 0; max-width: 700px; }
+    
+    .social-links { display: flex; gap: 25px; justify-content: center; margin-top: 10px; }
+    .social-icon svg { fill: #AAAAAA; transition: fill 0.3s ease, transform 0.3s ease; }
+    .social-icon:hover svg { fill: #FFFFFF; transform: translateY(-3px); }
+
+    /* 5. NỘI DUNG CHÍNH (PADDING CHO GỌN) */
+    .main-content {
+        padding: 0 50px; /* Thêm padding 2 bên cho nội dung đỡ bị sát lề */
+    }
+
+    /* 6. METRIC CARDS */
+    .metric-card { 
+        background: #16181C;
+        padding: 20px; border-radius: 12px; text-align: center; 
+        border: 1px solid #2A2F38; 
+    }
+    .metric-val { font-size: 28px; font-weight: 800; color: white; margin-top: 5px; }
+    .metric-lbl { font-size: 13px; text-transform: uppercase; color: #888; font-weight: 600; }
     .live-dot { height: 8px; width: 8px; background-color: #FF4B4B; border-radius: 50%; display: inline-block; margin-left: 5px; animation: blink 1.5s infinite; }
 
-    /* === VIDEO CARD (Elegant Dark Style - image_5.png) === */
-    .video-card-container { margin-bottom: 25px; }
+    /* 7. VIDEO CARD STYLE (image_5.png) */
     .video-card {
-        background-color: #16181C; /* Nền rất tối */
-        border-radius: 16px; overflow: hidden;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-        border: 1px solid #2A2F38;
-        transition: all 0.3s ease;
+        background-color: #121212; 
+        border-radius: 12px; overflow: hidden;
+        border: 1px solid #333;
+        margin-bottom: 20px;
     }
-    .video-card:hover { 
-        box-shadow: 0 15px 30px rgba(0,0,0,0.6);
-        border-color: #555;
-    }
-    .vid-thumb-wrapper { 
-        position: relative; width: 100%; padding-top: 56.25%; /* Tỷ lệ 16:9 */
-        overflow: hidden; 
-    }
-    .vid-thumb { 
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-        object-fit: cover; transition: transform 0.5s ease;
-        opacity: 0.8; /* Làm tối ảnh một chút */
-    }
-    .video-card:hover .vid-thumb { transform: scale(1.05); opacity: 1; }
+    .vid-thumb-wrapper { position: relative; width: 100%; padding-top: 56.25%; overflow: hidden; }
+    .vid-thumb { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: opacity 0.3s; }
+    .video-card:hover .vid-thumb { opacity: 1; }
     .vid-play-icon {
-        position: absolute; top: 50%; left: 50%;
-        transform: translate(-50%, -50%) scale(0.8);
-        font-size: 50px; color: rgba(255,255,255,0.8);
-        opacity: 0; transition: all 0.3s ease;
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        font-size: 40px; color: rgba(255,255,255,0.8);
     }
-    .video-card:hover .vid-play-icon { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-
     .vid-content { padding: 15px; }
     .vid-title { 
-        font-size: 15px; font-weight: 700; color: #FFFFFF;
-        margin-bottom: 15px; line-height: 1.4;
-        height: 42px; overflow: hidden; /* Giới hạn 2 dòng */
+        font-size: 14px; font-weight: 700; color: #FFFFFF;
+        margin-bottom: 12px; height: 40px; overflow: hidden;
+        text-transform: uppercase; line-height: 1.4;
         display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-        text-transform: uppercase; letter-spacing: 0.5px;
     }
     .vid-footer {
         display: flex; justify-content: space-between;
-        border-top: 1px solid #2A2F38;
-        padding-top: 12px; font-size: 13px; font-weight: 600;
+        border-top: 1px solid #333;
+        padding-top: 10px; font-size: 12px; font-weight: 600;
     }
-    .stat-item { display: flex; align-items: center; gap: 5px; }
-    /* Màu sắc theo yêu cầu image_5.png */
-    .stat-view { color: #64B5F6; } /* Xanh dương nhạt */
-    .stat-like { color: #81C784; } /* Xanh lá nhạt */
-    .stat-comment { color: #FFD54F; } /* Vàng nhạt */
+    .stat-view { color: #64B5F6; }
+    .stat-like { color: #81C784; }
+    .stat-comment { color: #FFD54F; }
 
-    /* === CALENDAR (Lịch trình - image_6.png style) === */
+    /* 8. CALENDAR (FIXED HTML) */
     .calendar-container {
-        background-color: #1A1F26; padding: 30px;
-        border-radius: 25px; border: 1px solid #2A2F38;
+        background-color: #1A1F26; padding: 20px;
+        border-radius: 20px; border: 1px solid #333;
+        max-width: 900px; margin: 0 auto;
     }
-    .calendar-header { 
-        text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 25px; color: #FFF; 
+    .cal-header { text-align: center; color: white; font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+    .cal-grid {
+        display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;
     }
-    .calendar-grid {
-        display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px;
-        text-align: center;
+    .cal-cell {
+        background-color: #242B35; color: white;
+        padding: 15px; border-radius: 10px; text-align: center;
+        font-weight: bold; cursor: pointer;
     }
-    .cal-day-name { font-weight: 600; color: #888; margin-bottom: 10px; }
-    .cal-date {
-        background-color: #242B35; color: #FFF;
-        padding: 20px 0; border-radius: 15px;
-        font-size: 18px; font-weight: bold;
-        cursor: pointer; transition: all 0.2s ease;
-        box-shadow: inset 0 0 0 1px #333;
-    }
-    .cal-date:hover { background-color: #FFD700; color: #000; box-shadow: 0 5px 15px rgba(255,215,0,0.3); }
-    .cal-date.empty { background-color: transparent; box-shadow: none; cursor: default; }
-    
-    /* === FOOTER === */
-    .custom-footer {
-        margin-top: 50px; padding: 30px 0;
-        border-top: 1px solid #2A2F38;
-        text-align: center; color: #888; font-size: 14px;
-    }
-    .footer-links a { color: #AAA; margin: 0 10px; font-weight: 600; }
-    .footer-links a:hover { color: #FFD700; }
+    .cal-cell:hover { background-color: #FFD700; color: black; }
+    .cal-head { color: #888; font-size: 14px; text-align: center; padding-bottom: 10px; font-weight: 600;}
+    .cal-empty { background: transparent; cursor: default; }
 
-    /* Animations */
+    /* 9. FOOTER (image_032fcc.png) */
+    .footer-container {
+        background-color: #000000;
+        padding: 40px 50px;
+        margin-top: 50px;
+        border-top: 1px solid #222;
+    }
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .footer-left h3 { color: white; font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+    .footer-left p { color: #AAA; font-size: 14px; max-width: 400px; line-height: 1.5; }
+    .footer-right h3 { color: white; font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+    .footer-right p { color: #AAA; font-size: 14px; }
+    .copyright {
+        text-align: center; color: #555; font-size: 12px; margin-top: 30px;
+        border-top: 1px solid #111; padding-top: 20px;
+    }
+
     @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# --- KHỞI TẠO DỮ LIỆU (STATE) ---
+# --- KHỞI TẠO STATE ---
 # ==========================================
 if 'init_done' not in st.session_state:
     df, latest = load_sheet_data()
     st.session_state['df'] = df
     st.session_state['latest'] = latest
     if latest is not None:
-        # Khởi tạo số view tổng để chạy hiệu ứng
         st.session_state['total_view_sim'] = int(latest['Youtube_View'])
     else:
         st.session_state['total_view_sim'] = 0
-    # Load video lần đầu
     st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
     st.session_state['init_done'] = True
 
 # ==========================================
-# --- CẤU TRÚC TRANG WEB (LAYOUT) ---
+# --- MAIN LAYOUT (THỨ TỰ MỚI) ---
 # ==========================================
 
-# 1. Banner & Profile Header (Luôn hiển thị)
-st.markdown(f"""
-<div class="banner-container">
-    <img src="{BANNER_URL}" class="banner-img">
-    <div class="banner-overlay"></div>
-</div>
-<div class="profile-section">
-    <img src="{AVATAR_URL}" class="avatar">
-    <h1 class="artist-name">PHƯƠNG MỸ CHI</h1>
-    <p class="artist-bio">"Cô bé dân ca" - Biểu tượng âm nhạc trẻ trung, năng động và đầy sáng tạo của Việt Nam.</p>
-    <div class="social-links">
-        <a href="{SOCIAL_LINKS['facebook']}" target="_blank" class="social-icon" title="Facebook">{svg_icons['facebook']}</a>
-        <a href="{SOCIAL_LINKS['spotify']}" target="_blank" class="social-icon" title="Spotify">{svg_icons['spotify']}</a>
-        <a href="{SOCIAL_LINKS['youtube']}" target="_blank" class="social-icon" title="YouTube">{svg_icons['youtube']}</a>
-        <a href="{SOCIAL_LINKS['instagram']}" target="_blank" class="social-icon" title="Instagram">{svg_icons['instagram']}</a>
-        <a href="{SOCIAL_LINKS['threads']}" target="_blank" class="social-icon" title="Threads">{svg_icons['threads']}</a>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-# 2. Navigation Tabs (Menu chính)
+# 1. NAVIGATION TABS (ĐẶT TRÊN CÙNG)
+# Bỏ icon trong tên tab theo yêu cầu
 tab_home, tab_about, tab_schedule, tab_stats, tab_vote = st.tabs([
-    "🏠 TRANG CHỦ", "ℹ️ GIỚI THIỆU", "📅 LỊCH TRÌNH", "📊 THỐNG KÊ", "🗳️ VOTING"
+    "Trang chủ", "Giới thiệu", "Lịch trình", "Thống kê", "Voting"
 ])
 
-# ==========================================
-# --- NỘI DUNG CÁC TAB ---
-# ==========================================
+# 2. BANNER & PROFILE (HIỂN THỊ TRONG TAB TRANG CHỦ HOẶC LUÔN HIỂN THỊ)
+# Để giống web thật, thường banner sẽ nằm dưới Nav. Ta đặt nó vào container chung.
+# Tuy nhiên Streamlit Tabs render nội dung bên trong. 
+# Để Banner luôn hiện ở Home, ta đặt code Banner vào trong Tab Home.
 
-# --- TAB 1: TRANG CHỦ (Real-time Dashboard & Videos) ---
 with tab_home:
-    st.markdown("### 🔥 REAL-TIME SNAPSHOT", unsafe_allow_html=True)
-    metrics_placeholder = st.empty() # Placeholder cho số nhảy
-
-    st.markdown("### 🎬 LATEST RELEASES", unsafe_allow_html=True)
-    video_placeholder = st.empty() # Placeholder cho video
-
-# --- TAB 2: GIỚI THIỆU ---
-with tab_about:
-    st.markdown("""
-    ### 🌟 HÀNH TRÌNH ÂM NHẠC
-    
-    **Phuong My Chi** (sinh năm 2003) là một nữ ca sĩ nổi tiếng Việt Nam, được biết đến rộng rãi sau khi đạt danh hiệu Á quân chương trình *Giọng hát Việt nhí* mùa đầu tiên (2013).
-    
-    * **2013:** Á quân The Voice Kids Vietnam. Gây bão với "Quê Em Mùa Nước Lũ".
-    * **2014-2020:** Theo đuổi dòng nhạc dân ca, trữ tình. Phát hành nhiều album thành công như "Thương về miền Trung", "Chờ người". Đạt giải Mai Vàng, Cống Hiến.
-    * **2022-Nay:** Lột xác mạnh mẽ về hình ảnh và phong cách âm nhạc. Kết hợp giữa chất liệu truyền thống và âm nhạc điện tử hiện đại.
-    
-    **Dấu ấn gần đây:** Album "Vũ Trụ Cò Bay" (2023) là một cú hích lớn, khẳng định tư duy âm nhạc độc đáo và trưởng thành của Phương Mỹ Chi.
-    """)
-    st.image(BANNER_URL, use_column_width=True)
-
-# --- TAB 3: LỊCH TRÌNH (Calendar UI Placeholder) ---
-with tab_schedule:
-    st.markdown("""
-    ### 📅 LỊCH TRÌNH HOẠT ĐỘNG THÁNG 1/2026
-    *Lưu ý: Đây là lịch trình mô phỏng.*
-    """)
-    # Tạo giao diện lịch bằng HTML/CSS (Mô phỏng image_6.png)
-    st.markdown("""
-    <div class="calendar-container">
-        <div class="calendar-header">January 2026</div>
-        <div class="calendar-grid">
-            <div class="cal-day-name">T2</div><div class="cal-day-name">T3</div><div class="cal-day-name">T4</div><div class="cal-day-name">T5</div><div class="cal-day-name">T6</div><div class="cal-day-name">T7</div><div class="cal-day-name">CN</div>
-            
-            <div class="cal-date empty"></div><div class="cal-date empty"></div><div class="cal-date empty"></div>
-            <div class="cal-date" title="Sự kiện A">1</div><div class="cal-date">2</div><div class="cal-date" title="Show diễn B">3</div><div class="cal-date">4</div>
-            
-            <div class="cal-date">5</div><div class="cal-date">6</div><div class="cal-date" title="Quay MV">7</div><div class="cal-date">8</div><div class="cal-date">9</div><div class="cal-date">10</div><div class="cal-date">11</div>
-            
-            <div class="cal-date">12</div><div class="cal-date">13</div><div class="cal-date">14</div><div class="cal-date" title="Họp báo">15</div><div class="cal-date">16</div><div class="cal-date">17</div><div class="cal-date">18</div>
-            
-            <div class="cal-date">19</div><div class="cal-date">20</div><div class="cal-date">21</div><div class="cal-date">22</div><div class="cal-date">23</div><div class="cal-date" title="Concert">24</div><div class="cal-date">25</div>
-             <div class="cal-date">26</div><div class="cal-date">27</div><div class="cal-date">28</div><div class="cal-date">29</div><div class="cal-date">30</div><div class="cal-date">31</div><div class="cal-date empty"></div>
-        </div>
+    # BANNER FULL WIDTH
+    st.markdown(f"""
+    <div class="banner-container">
+        <img src="{BANNER_URL}" class="banner-img">
     </div>
     """, unsafe_allow_html=True)
 
-# --- TAB 4: THỐNG KÊ CHI TIẾT ---
+    # PROFILE (Avatar đè lên Banner)
+    st.markdown(f"""
+    <div class="profile-section">
+        <img src="{AVATAR_URL}" class="avatar">
+        <h1 class="artist-name">PHƯƠNG MỸ CHI</h1>
+        <p class="artist-bio">Kết nối cùng cộng đồng fan và thưởng thức âm nhạc chất lượng.</p>
+        <div class="social-links">
+            <a href="{SOCIAL_LINKS['facebook']}" target="_blank" class="social-icon">{svg_icons['facebook']}</a>
+            <a href="{SOCIAL_LINKS['instagram']}" target="_blank" class="social-icon">{svg_icons['instagram']}</a>
+            <a href="{SOCIAL_LINKS['threads']}" target="_blank" class="social-icon">{svg_icons['threads']}</a>
+            <a href="{SOCIAL_LINKS['youtube']}" target="_blank" class="social-icon">{svg_icons['youtube']}</a>
+            <a href="{SOCIAL_LINKS['spotify']}" target="_blank" class="social-icon">{svg_icons['spotify']}</a>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # NỘI DUNG CHÍNH (Trong Container padding)
+    st.markdown('<div class="main-content">', unsafe_allow_html=True)
+    
+    st.markdown("### 🔥 REAL-TIME DASHBOARD")
+    metrics_placeholder = st.empty()
+
+    st.markdown("### 🎬 LATEST RELEASES")
+    video_placeholder = st.empty()
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+# --- TAB 2: GIỚI THIỆU ---
+with tab_about:
+    st.markdown('<div class="main-content" style="margin-top: 30px;">', unsafe_allow_html=True)
+    c1, c2 = st.columns([1, 2])
+    with c1:
+        st.image(AVATAR_URL, width=300)
+    with c2:
+        st.markdown("""
+        ### PHƯƠNG MỸ CHI
+        
+        **Phương Mỹ Chi** (sinh ngày 13 tháng 1 năm 2003) là một nữ ca sĩ người Việt Nam chuyên hát thể loại nhạc dân ca Nam Bộ. Cô bắt đầu nổi danh từ khi tham gia và đạt giải á quân chương trình truyền hình thực tế *Giọng hát Việt nhí* mùa đầu tiên.
+        
+        Năm 2024 đánh dấu bước chuyển mình mạnh mẽ của Phương Mỹ Chi với hình ảnh trẻ trung, năng động nhưng vẫn giữ được nét văn hóa truyền thống qua các sản phẩm âm nhạc kết hợp đương đại.
+        """)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+# --- TAB 3: LỊCH TRÌNH (FIXED HTML) ---
+with tab_schedule:
+    st.markdown('<div class="main-content" style="margin-top: 30px;">', unsafe_allow_html=True)
+    # HTML Lịch trình đã được sửa lỗi cú pháp
+    st.markdown("""
+    <div class="calendar-container">
+        <div class="cal-header">January 2026</div>
+        <div class="cal-grid">
+            <div class="cal-head">T2</div><div class="cal-head">T3</div><div class="cal-head">T4</div><div class="cal-head">T5</div><div class="cal-head">T6</div><div class="cal-head">T7</div><div class="cal-head">CN</div>
+            
+            <div class="cal-cell cal-empty"></div><div class="cal-cell cal-empty"></div><div class="cal-cell cal-empty"></div>
+            <div class="cal-cell">1</div><div class="cal-cell">2</div><div class="cal-cell">3</div><div class="cal-cell">4</div>
+            
+            <div class="cal-cell">5</div><div class="cal-cell">6</div><div class="cal-cell">7</div><div class="cal-cell">8</div><div class="cal-cell">9</div><div class="cal-cell">10</div><div class="cal-cell">11</div>
+            
+            <div class="cal-cell">12</div><div class="cal-cell">13</div><div class="cal-cell">14</div><div class="cal-cell">15</div><div class="cal-cell">16</div><div class="cal-cell">17</div><div class="cal-cell">18</div>
+            
+            <div class="cal-cell">19</div><div class="cal-cell">20</div><div class="cal-cell">21</div><div class="cal-cell">22</div><div class="cal-cell">23</div><div class="cal-cell">24</div><div class="cal-cell">25</div>
+            
+            <div class="cal-cell">26</div><div class="cal-cell">27</div><div class="cal-cell">28</div><div class="cal-cell">29</div><div class="cal-cell">30</div><div class="cal-cell">31</div><div class="cal-cell cal-empty"></div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+# --- TAB 4: THỐNG KÊ (MULTI-CHART) ---
 with tab_stats:
-    st.markdown("### 📊 BIỂU ĐỒ TĂNG TRƯỞNG")
+    st.markdown('<div class="main-content" style="margin-top: 30px;">', unsafe_allow_html=True)
+    st.markdown("### 📊 BIỂU ĐỒ TĂNG TRƯỞNG TỔNG HỢP")
+    
     if 'df' in st.session_state and not st.session_state['df'].empty:
-        df_chart = st.session_state['df']
-        # Tạo biểu đồ với Plotly theme tối
-        fig = px.line(df_chart, x='Time', y='Youtube_View', title='Tổng View Kênh Youtube (Theo thời gian)')
-        fig.update_traces(line_color='#FF0000', line_width=3)
-        fig.update_layout(
-            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
-            font_color='#ccc', title_font_size=20,
-            xaxis=dict(showgrid=False), yaxis=dict(showgrid=True, gridcolor='#333')
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        df_chart = st.session_state['df'].copy()
+        
+        # Multiselect để chọn chỉ số muốn xem
+        options = ['Youtube_View', 'Youtube_Sub', 'Spotify_Listener', 'TikTok_Follower', 'Facebook_Follower']
+        selected_metrics = st.multiselect("Chọn chỉ số hiển thị:", options, default=['Youtube_View'])
+        
+        if selected_metrics:
+            fig = px.line(df_chart, x='Time', y=selected_metrics, title='Biến động các chỉ số theo thời gian')
+            fig.update_layout(
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
+                font_color='#ccc', title_font_size=18,
+                xaxis=dict(showgrid=False), yaxis=dict(showgrid=True, gridcolor='#333'),
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+            )
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.warning("Vui lòng chọn ít nhất một chỉ số.")
     else:
-        st.info("Đang tải dữ liệu biểu đồ...")
+        st.info("Đang tải dữ liệu...")
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
 # --- TAB 5: VOTING ---
 with tab_vote:
-    st.markdown("### 🗳️ CỔNG BÌNH CHỌN")
-    st.info("Hiện tại chưa có chiến dịch bình chọn nào đang diễn ra. Vui lòng quay lại sau!")
-    # Placeholder cho tương lai
-    # st.progress(75, text="Giải thưởng Cống Hiến - Hạng mục Nữ ca sĩ của năm (Đang dẫn đầu!)")
+    st.markdown('<div class="main-content" style="margin-top: 30px;">', unsafe_allow_html=True)
+    st.info("Chưa có chiến dịch bình chọn nào đang diễn ra.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ==========================================
-# --- MAIN LOOP (CHẠY NGẦM ĐỂ CẬP NHẬT LIVE Ở TAB TRANG CHỦ) ---
+# --- LOOP & RENDER (HOME TAB) ---
 # ==========================================
-# Chỉ chạy vòng lặp update khi đang ở Tab Trang chủ (để tối ưu hiệu năng)
-# Tuy nhiên, Streamlit không hỗ trợ detect tab active dễ dàng. 
-# Nên ta vẫn chạy ngầm, nhưng chỉ render vào placeholder nếu nó tồn tại.
-
 while True:
-    # 1. SIMULATION: Tăng View Ảo cho Tổng Kênh
-    st.session_state['total_view_sim'] += random.randint(1, 12)
+    # 1. Logic nhảy số
+    st.session_state['total_view_sim'] += random.randint(1, 15)
 
-    # 2. SYNC API: Đồng bộ dữ liệu thật mỗi 60 giây
+    # 2. Sync API (60s)
     if int(time.time()) % 60 == 0:
         df_new, latest_new = load_sheet_data()
         if latest_new is not None:
             st.session_state['latest'] = latest_new
-            real_val = int(latest_new['Youtube_View'])
-            if real_val > st.session_state['total_view_sim']:
-                st.session_state['total_view_sim'] = real_val
-        # Cập nhật lại video
+            real = int(latest_new['Youtube_View'])
+            if real > st.session_state['total_view_sim']:
+                st.session_state['total_view_sim'] = real
         st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
 
-    # 3. RENDER: Cập nhật giao diện TRANG CHỦ
+    # 3. Render Home Elements
     lat = st.session_state['latest']
     if lat is not None:
-        # Render Metrics (Số nhảy)
+        # Metrics
         with metrics_placeholder.container():
             c1, c2, c3, c4 = st.columns(4)
-            # View tổng dùng số mô phỏng (sim)
-            c1.markdown(f"""<div class="metric-card"><div class="metric-lbl">TOTAL VIEWS <span class="live-dot"></span></div><div class="metric-val" style="color:#FF4B4B">{st.session_state['total_view_sim']:,}</div></div>""", unsafe_allow_html=True)
-            # Các số khác dùng số thật từ sheet
-            c2.markdown(f"""<div class="metric-card"><div class="metric-lbl">SUBSCRIBERS</div><div class="metric-val">{lat['Youtube_Sub']:,}</div></div>""", unsafe_allow_html=True)
-            c3.markdown(f"""<div class="metric-card"><div class="metric-lbl">TIKTOK FANS</div><div class="metric-val">{lat['TikTok_Follower']:,}</div></div>""", unsafe_allow_html=True)
-            c4.markdown(f"""<div class="metric-card"><div class="metric-lbl">SPOTIFY MONTHLY</div><div class="metric-val" style="color:#1DB954">{lat['Spotify_Listener']:,}</div></div>""", unsafe_allow_html=True)
+            c1.markdown(f"""<div class="metric-card"><div class="metric-lbl">Youtube Views <span class="live-dot"></span></div><div class="metric-val" style="color:#FF4B4B">{st.session_state['total_view_sim']:,}</div></div>""", unsafe_allow_html=True)
+            c2.markdown(f"""<div class="metric-card"><div class="metric-lbl">Youtube Subs</div><div class="metric-val">{lat['Youtube_Sub']:,}</div></div>""", unsafe_allow_html=True)
+            c3.markdown(f"""<div class="metric-card"><div class="metric-lbl">TikTok Fans</div><div class="metric-val">{lat['TikTok_Follower']:,}</div></div>""", unsafe_allow_html=True)
+            c4.markdown(f"""<div class="metric-card"><div class="metric-lbl">Spotify</div><div class="metric-val" style="color:#1DB954">{lat['Spotify_Listener']:,}</div></div>""", unsafe_allow_html=True)
 
-        # Render Video Cards (Số tĩnh - Style mới image_5.png)
+        # Videos
         with video_placeholder.container():
             cols = st.columns(3)
             v_data = st.session_state['video_data']
@@ -432,41 +460,51 @@ while True:
                 if vid_id in v_data:
                     d = v_data[vid_id]
                     with cols[i % 3]:
-                        # HTML cấu trúc card mới
                         st.markdown(f"""
-                        <div class="video-card-container">
-                            <div class="video-card">
-                                <a href="https://www.youtube.com/watch?v={d['id']}" target="_blank" class="vid-link">
-                                    <div class="vid-thumb-wrapper">
-                                        <img src="{d['thumb']}" class="vid-thumb">
-                                        <div class="vid-play-icon">▶</div>
-                                    </div>
-                                </a>
-                                <div class="vid-content">
-                                    <div class="vid-title">{d['title']}</div>
-                                    <div class="vid-footer">
-                                        <div class="stat-item stat-view">👁️ {d['view']:,}</div>
-                                        <div class="stat-item stat-like">❤ {d['like']:,}</div>
-                                        <div class="stat-item stat-comment">💬 {d['comment']:,}</div>
-                                    </div>
+                        <div class="video-card">
+                            <a href="https://www.youtube.com/watch?v={d['id']}" target="_blank">
+                                <div class="vid-thumb-wrapper">
+                                    <img src="{d['thumb']}" class="vid-thumb">
+                                    <div class="vid-play-icon">▶</div>
+                                </div>
+                            </a>
+                            <div class="vid-content">
+                                <div class="vid-title">{d['title']}</div>
+                                <div class="vid-footer">
+                                    <span class="stat-view">👁️ {d['view']:,}</span>
+                                    <span class="stat-like">❤ {d['like']:,}</span>
+                                    <span class="stat-comment">💬 {d['comment']:,}</span>
                                 </div>
                             </div>
                         </div>
                         """, unsafe_allow_html=True)
-    
-    # 4. FOOTER (Luôn hiển thị cuối trang)
-    # Dùng empty container để footer không bị đẩy lên khi nội dung thay đổi
-    footer_container = st.empty()
-    with footer_container.container():
-        st.divider()
-        st.markdown("""
-        <div class="custom-footer">
-            <div class="footer-links">
-                <a href="#">Trang chủ</a> | <a href="#">Liên hệ</a> | <a href="#">Điều khoản</a> | <a href="#">Bảo mật</a>
-            </div>
-            <p style="margin-top: 20px;">© 2026 Nhi Nha Nhi Nhô Cùng Mỹ Chi </p>
-            <p style="font-size: 12px; color: #666;">Designed for PMC Fandom.</p>
-        </div>
-        """, unsafe_allow_html=True)
 
-    time.sleep(1) # Cập nhật mỗi giây
+    time.sleep(1)
+
+# ==========================================
+# --- FOOTER (GLOBAL) ---
+# ==========================================
+# Lưu ý: Trong Streamlit, code chạy tuần tự.
+# Vì có vòng lặp While True ở trên, code Footer này sẽ không bao giờ được chạm tới nếu để ở cuối file ngoài vòng lặp.
+# GIẢI PHÁP: Đưa Footer vào một empty container ở cuối code, nhưng được gọi RENDER bên trong vòng lặp While True (Nếu muốn nó hiện ở Home),
+# Hoặc đơn giản là hiển thị nó ở các Tab tĩnh khác. 
+# Nhưng vì Home có vòng lặp vô tận, ta dùng `st.sidebar` hoặc một container cố định.
+
+# Tạm thời để ở đây để nếu user chuyển tab khác (thoát vòng lặp Home) thì nó hiện.
+st.markdown("""
+<div class="footer-container">
+    <div class="footer-content">
+        <div class="footer-left">
+            <h3>WINGS for PMC</h3>
+            <p>Kết nối cùng cộng đồng fan và thưởng thức âm nhạc chất lượng.</p>
+        </div>
+        <div class="footer-right">
+            <h3>Liên hệ</h3>
+            <p>Email: nhinhanhinhocungmychi@gmail.com</p>
+        </div>
+    </div>
+    <div class="copyright">
+        © 2026 NhinhanhinhocungMyChi. Designed with love for Phuong My Chi.
+    </div>
+</div>
+""", unsafe_allow_html=True)
