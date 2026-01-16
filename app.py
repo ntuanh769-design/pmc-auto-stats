@@ -13,15 +13,15 @@ import json
 # --- 1. CẤU HÌNH (QUAN TRỌNG: KHÔNG ĐƯỢC XÓA) ---
 # ==========================================
 SHEET_NAME = 'PMC Data Center'
-VIDEO_IDS = ['k3C6-1f9gHw', 'sJytolUBttX8', '7P6Wv5_o-2Q'] 
+VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8'] # Thay ID của bạn
 YOUTUBE_API_KEY = 'AIzaSyAueu53W-r0VWcYJwYrSSboOKuWYQfLn34' 
 
-# --- CẤU HÌNH ẢNH & LINK (KHAI BÁO BIẾN Ở ĐÂY ĐỂ TRÁNH LỖI NAME ERROR) ---
-BANNER_URL = "https://images.unsplash.com/photo-1493225255756-d9584f8606e9?q=80&w=2070&auto=format&fit=crop" 
-AVATAR_URL = "https://yt3.googleusercontent.com/ytc/AIdro_kX4tF4d_1F4d4t4t4t4t4t4t4t4t4t4t4t4t4=s176-c-k-c0x00ffffff-no-rj" 
+# Link ảnh và Mạng xã hội
+BANNER_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/600369698_1419646709529546_341344486868245985_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeE8R8ouge4yL7lfWGQ5Kzk1Enry68g3cr0SevLryDdyvaWspFlBItEaOUW321Od9poGbHjYncGX9_MS7BEcv6Ww&_nc_ohc=WHolhcYE84IQ7kNvwH3WDS7&_nc_oc=AdlMDmMAztdFXjYHzVG6BJpmRMy1E7qVPlz3DWxOrwo2YrZS0MeRHLPCU2rF4_OdTXE&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=AXvAnGOph6iEFu_TWBD-SA&oh=00_AfoafS9eKG1wduMrKvUIYzK6Mu4ZIs0Q3Idtuj5CW5qvEg&oe=696F8D56" # Ảnh bìa Concert
+AVATAR_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/482242951_1184903749670511_116581152088062484_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHl6z1Zf722SPdydZ2cSXjkZpHk_q-4D51mkeT-r7gPndTlCsa2S-9POMvKIBb4ckII1tv_ascEHrs3kes9q9GO&_nc_ohc=0KAgPDwqVoYQ7kNvwGvYZzT&_nc_oc=AdkiSSI5Nm1z4L60wjOWhF2RlhO42CTckj5fJghrGNCIl1rRcnH9YUwQDlrcIYwvWshnvTSvZ0pqlV2sGzg6tPGG&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=VKwmNPd5x84LUuWGX44UBw&oh=00_AfpI8odqVyRf4fYhFFiablQhci6WR8tZfRwbNfW2uoUEig&oe=696F885F" # Ảnh Avatar kênh
 SOCIAL_LINKS = {
     "facebook": "https://www.facebook.com/phuongmychi",
-    "spotify": "#",
+    "spotify": "https://open.spotify.com/artist/1BcjfrXV4Oe3fK0c8dnxFF?si=8adGRTLqQ4SKtELO5P0Xjw",
     "youtube": "https://www.youtube.com/channel/UCGRIV5jOtKyAibhjBdIndZQ",
     "instagram": "https://www.instagram.com/phuongmychi/",
     "threads": "https://www.threads.net/@phuongmychi"
