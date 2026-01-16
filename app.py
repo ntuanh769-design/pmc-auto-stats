@@ -1,16 +1,3 @@
-Lỗi `NameError: name 'BANNER_URL' is not defined` xảy ra có thể do trong quá trình copy/paste, phần khai báo biến `BANNER_URL` ở đầu file bị thiếu hoặc bị xóa mất.
-
-Ngoài ra, hình ảnh **Lịch trình bị lỗi hiện mã code** (image_0336b5.png) là do cơ chế của Markdown: khi bạn viết mã HTML mà thò thụt vào trong (indent), Streamlit sẽ hiểu nhầm đó là **khối lệnh (Code block)** và in nguyên văn mã ra thay vì hiển thị giao diện.
-
-Dưới đây là bản code **ĐÃ SỬA LỖI HOÀN TOÀN**:
-
-1. **Fix lỗi NameError:** Đảm bảo biến được khai báo.
-2. **Fix lỗi Lịch trình:** Xử lý lại các đoạn mã HTML để không bị hiểu nhầm là code block.
-3. **Tinh chỉnh Banner:** Full màn hình và đẩy thanh Menu lên trên cùng.
-
-Bạn vui lòng **Copy toàn bộ code này đè vào file `app.py**` nhé:
-
-```python
 import streamlit as st
 import pandas as pd
 import gspread
