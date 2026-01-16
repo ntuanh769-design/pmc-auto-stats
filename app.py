@@ -81,7 +81,7 @@ def load_sheet_data():
         
         df['Time'] = pd.to_datetime(df['Time'])
         latest = df.iloc[-1].copy()
-        for col in cols_to_fix: 
+        for col in cols_to_fix: # Fix số 0
             if col in df.columns and latest[col] == 0:
                 valid = df[df[col] > 0][col]
                 if not valid.empty: latest[col] = valid.iloc[-1]
@@ -131,21 +131,11 @@ st.markdown("""
     .val-comm { color: #FFD54F; font-weight: 700; }
     .vid-footer { border-top: 1px solid #333; padding-top: 12px; margin-top: 12px; font-size: 11px; color: #666; text-align: right; }
 
-    /* FOOTER */
-    .footer-container { background: linear-gradient(180deg, #4A148C, #311B92); padding: 40px; margin-top: 60px; color: white; text-align: left; }
-    .footer-title { font-size: 28px; font-weight: bold; margin-bottom: 15px; }
-    .footer-desc { font-size: 14px; margin-bottom: 20px; max-width: 600px; line-height: 1.5; color: #E1BEE7; }
-    .footer-info-box { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; display: inline-block; }
-    .footer-info-title { font-weight: bold; margin-bottom: 5px; color: #FFF; }
-    .footer-info-text { font-size: 13px; color: #E1BEE7; margin: 2px 0; }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; font-size: 12px; color: #B39DDB; text-align: center; }
-    .hashtag { font-weight: bold; color: #FFF; }
-
     /* OTHERS */
     .metric-card { background: #16181C; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #333; }
     .metric-val { font-size: 28px; font-weight: 800; color: white; }
     .metric-lbl { font-size: 12px; text-transform: uppercase; color: #888; font-weight: bold; }
-    .live-dot { height: 8px; width: 8px; background: #FF4B4B; border-radius: 50%; display: inline-block; margin-left: 5px; animation: blink 1.5s infinite; }
+    .live-dot { height: 8px; width: 8px; background: #FF4B4B; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
     .main-content { padding: 0 40px; }
     .content-spacer { height: 60px; }
     @keyframes blink { 0% {opacity:1} 50% {opacity:0.4} 100% {opacity:1} }
@@ -192,7 +182,7 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# Tabs (ĐÃ BỎ TAB VOTING)
+# Tabs
 tab_home, tab_about, tab_schedule, tab_stats = st.tabs(["TRANG CHỦ", "GIỚI THIỆU", "LỊCH TRÌNH", "THỐNG KÊ"])
 
 with tab_home:
@@ -246,9 +236,6 @@ with tab_stats:
     else:
         st.info("Đang tải dữ liệu...")
     st.markdown('</div>', unsafe_allow_html=True)
-
-# Khung chứa Footer
-footer_placeholder = st.empty()
 
 # ==========================================
 # --- 6. LOOP & RENDER ---
@@ -304,27 +291,6 @@ while True:
 <div class="vid-footer">
 Thêm vào: {d['published']}
 </div>
-</div>
-</div>
-""", unsafe_allow_html=True)
-
-    # --- RENDER FOOTER (TRONG VÒNG LẶP ĐỂ LUÔN HIỂN THỊ) ---
-    with footer_placeholder.container():
-        st.markdown("""
-<div class="footer-container">
-<div class="footer-title">WeYoung Tracker</div>
-<div class="footer-desc">
-Hệ thống theo dõi và phân tích bình chọn cho giải thưởng WeYoung 2025. Truy cập trang web giải thưởng để bình chọn.
-</div>
-<div class="footer-info-box">
-<div class="footer-info-title">Thông tin</div>
-<div class="footer-info-text">• Dữ liệu được cập nhật trực tiếp từ hệ thống định kỳ mỗi 10 giây.</div>
-<div class="footer-info-text">• Đồng thời ghi nhận lại mỗi 10 phút để phân tích và dự đoán.</div>
-</div>
-<div class="footer-bottom">
-© Bản quyền giải thưởng thuộc về Công ty cổ phần VCCorp.<br>
-Phát triển độc lập bởi người hâm mộ chương trình ATVNCG.
-<br><span class="hashtag">#camonvidaden</span>
 </div>
 </div>
 """, unsafe_allow_html=True)
