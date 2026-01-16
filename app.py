@@ -11,12 +11,12 @@ import json
 
 # --- CẤU HÌNH ---
 SHEET_NAME = 'PMC Data Center'
-VIDEO_IDS = ['k3C6-1f9gHw', 'sJytolUBttX8', '7P6Wv5_o-2Q'] # Thay ID của bạn
+VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8'] # Thay ID của bạn
 YOUTUBE_API_KEY = 'AIzaSyAueu53W-r0VWcYJwYrSSboOKuWYQfLn34' 
 
 # Link ảnh (Bạn có thể thay bằng link ảnh khác của PMC)
-BANNER_URL = "https://images.unsplash.com/photo-1493225255756-d9584f8606e9?q=80&w=2070&auto=format&fit=crop" # Ảnh bìa Concert
-AVATAR_URL = "https://yt3.googleusercontent.com/ytc/AIdro_kX4tF4d_1F4d4t4t4t4t4t4t4t4t4t4t4t4t4=s176-c-k-c0x00ffffff-no-rj" # Ảnh Avatar kênh
+BANNER_URL = "https://www.facebook.com/photo?fbid=1419642599529957&set=pcb.1419646612862889" # Ảnh bìa Concert
+AVATAR_URL = "https://www.facebook.com/photo?fbid=1419642546196629&set=pcb.1419646612862889" # Ảnh Avatar kênh
 
 # --- HÀM 1: LẤY DATA VIDEO (API) ---
 def fetch_video_data_api(video_ids):
@@ -139,7 +139,7 @@ with c1:
 with c2:
     st.markdown("""
     <div style="padding-top: 10px;">
-        <p class="artist-name">PHƯƠNG MỸ CHI OFFICIAL 👑</p>
+        <p class="artist-name">PHƯƠNG MỸ CHI OFFICIAL ACCOUNTS 👑</p>
         <p class="artist-bio">"Cô bé dân ca" ngày nào giờ đã trở thành một biểu tượng âm nhạc trẻ trung, năng động và đầy sáng tạo.</p>
         <p>🌐 <a href="https://www.facebook.com/phuongmychi" style="color:#1877F2; text-decoration:none;">Facebook</a> &nbsp;|&nbsp; 
            🎵 <a href="#" style="color:#1DB954; text-decoration:none;">Spotify</a> &nbsp;|&nbsp; 
