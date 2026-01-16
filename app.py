@@ -187,7 +187,7 @@ with tab_home:
     <div class="profile-section">
         <img src="{AVATAR_URL}" class="avatar">
         <div class="artist-name">PHƯƠNG MỸ CHI</div>
-        <div style="color:#BBB; margin-top:5px; font-weight:600;">Nữ ca sĩ Gen Z đa tài và sáng tạo</div>
+        <div style="color:#BBB; margin-top:5px; font-weight:600;">"Cô bé dân ca" ngày nào giờ đã trở thành một biểu tượng âm nhạc trẻ trung, năng động và đầy sáng tạo.</div>
         <div class="social-links">
             <a href="{SOCIAL_LINKS['facebook']}" target="_blank" class="social-icon">{svg_icons['facebook']}</a>
             <a href="{SOCIAL_LINKS['instagram']}" target="_blank" class="social-icon">{svg_icons['instagram']}</a>
@@ -213,9 +213,13 @@ with tab_about:
     with c2:
         st.markdown("""
         ### PHƯƠNG MỸ CHI
-        **Phương Mỹ Chi** (sinh năm 2003) là ngôi sao sáng của dòng nhạc dân ca và nhạc nhẹ Việt Nam. Nổi lên từ danh hiệu Á quân *Giọng hát Việt nhí 2013*, cô đã chinh phục khán giả bằng chất giọng ngọt ngào và cảm xúc.
-        
-        Năm 2024-2025, Phương Mỹ Chi lột xác ngoạn mục với album *Vũ Trụ Cò Bay*, kết hợp táo bạo giữa văn học, văn hóa truyền thống và âm nhạc điện tử hiện đại.
+        **Phương Mỹ Chi** (sinh năm 2003) là ngôi sao sáng của dòng nhạc dân ca và nhạc nhẹ Việt Nam, được biết đến rộng rãi sau khi đạt danh hiệu Á quân chương trình *Giọng hát Việt nhí* mùa đầu tiên (2013).
+    
+    * **2013:** Á quân The Voice Kids Vietnam. Gây bão với "Quê Em Mùa Nước Lũ".
+    * **2014-2020:** Theo đuổi dòng nhạc dân ca, trữ tình. Phát hành nhiều album thành công như "Thương về miền Trung", "Chờ người". Đạt giải Mai Vàng, Cống Hiến.
+    * **2022-Nay:** Lột xác mạnh mẽ về hình ảnh và phong cách âm nhạc. Kết hợp giữa chất liệu truyền thống và âm nhạc điện tử hiện đại.
+    
+    **Dấu ấn gần đây:** Album "Vũ Trụ Cò Bay" (2023) là một cú hích lớn, khẳng định tư duy âm nhạc độc đáo và trưởng thành của Phương Mỹ Chi.
         """)
     st.markdown('</div>', unsafe_allow_html=True)
 
