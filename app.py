@@ -2,25 +2,22 @@ import streamlit as st
 import pandas as pd
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from googleapiclient.discovery import build # Cần thêm thư viện này
+from googleapiclient.discovery import build
 import datetime
 import time
 import random
 import plotly.express as px
-import plotly.graph_objects as go
 import json
 
 # --- CẤU HÌNH ---
 SHEET_NAME = 'PMC Data Center'
-# Bạn điền 3 ID Video muốn theo dõi vào đây:
-VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8'] 
-# (Nhớ thay ID_VIDEO_2, ID_VIDEO_3 bằng ID thật của bạn)
-
+# Thay 3 ID Video của bạn vào đây:
+VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8']
 YOUTUBE_API_KEY = 'AIzaSyAueu53W-r0VWcYJwYrSSboOKuWYQfLn34' 
 
-# --- HÀM LẤY CHI TIẾT 3 VIDEO (API) ---
-def get_video_details(video_ids):
-    stats_list = []
+# --- HÀM 1: LẤY DATA 3 VIDEO (API) ---
+def fetch_video_data_api(video_ids):
+    data_map = {}
     try:
         youtube = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
         request = youtube.videos().list(
@@ -30,29 +27,24 @@ def get_video_details(video_ids):
         response = request.execute()
         
         for item in response['items']:
+            vid_id = item['id']
             stats = item['statistics']
             snippet = item['snippet']
             
-            # Format số đẹp (ví dụ: 1.246.130)
-            view = "{:,}".format(int(stats.get('viewCount', 0))).replace(',', '.')
-            like = "{:,}".format(int(stats.get('likeCount', 0))).replace(',', '.')
-            comment = "{:,}".format(int(stats.get('commentCount', 0))).replace(',', '.')
-            
-            video_data = {
+            data_map[vid_id] = {
                 'title': snippet['title'],
                 'thumb': snippet['thumbnails']['high']['url'],
-                'view': view,
-                'like': like,
-                'comment': comment,
-                'published': snippet['publishedAt'][:10] # Lấy ngày đăng
+                'view': int(stats.get('viewCount', 0)),
+                'like': int(stats.get('likeCount', 0)),
+                'comment': int(stats.get('commentCount', 0)),
+                'published': snippet['publishedAt'][:10]
             }
-            stats_list.append(video_data)
     except Exception as e:
-        st.error(f"Lỗi lấy Video: {e}")
-    return stats_list
+        pass
+    return data_map
 
-# --- HÀM LOAD DỮ LIỆU TỔNG (Giữ nguyên) ---
-def load_data():
+# --- HÀM 2: LẤY DATA TỔNG (SHEET) ---
+def load_sheet_data():
     try:
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
         if "gcp_service_account" in st.secrets:
@@ -68,146 +60,158 @@ def load_data():
         
         data = worksheet.get_all_records()
         df = pd.DataFrame(data)
-        
         if df.empty: return df, None
 
-        df['Time'] = pd.to_datetime(df['Time'])
         cols_to_fix = ['Youtube_View', 'Youtube_Sub', 'Spotify_Listener', 'TikTok_Follower', 'Facebook_Follower']
         for col in cols_to_fix:
             if col in df.columns:
-                df[col] = df[col].astype(str).str.replace(',', '').str.replace('.', '')
-                df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0).astype(int)
-
+                df[col] = pd.to_numeric(df[col].astype(str).str.replace(',', '').str.replace('.', ''), errors='coerce').fillna(0).astype(int)
+        
+        df['Time'] = pd.to_datetime(df['Time'])
         latest = df.iloc[-1]
         return df, latest
-
-    except Exception as e:
-        st.error(f"Lỗi kết nối: {e}")
+    except:
         return pd.DataFrame(), None
 
 # --- GIAO DIỆN ---
-st.set_page_config(page_title="PMC Dashboard", page_icon="👑", layout="wide")
+st.set_page_config(page_title="PMC Live Dashboard", page_icon="👑", layout="wide")
 
-# CSS ĐỂ TẠO CARD ĐẸP NHƯ HÌNH
 st.markdown("""
 <style>
+    /* CSS cho Card Tổng */
     .metric-card { background-color: #f0f2f6; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 10px; }
     .metric-label { font-size: 14px; color: #666; }
-    .metric-value { font-size: 28px; font-weight: bold; color: #333; }
+    .metric-value { font-size: 32px; font-weight: bold; color: #333; }
     
-    /* CSS CHO VIDEO CARD (Giao diện đen mờ) */
+    /* CSS cho Card Video (Đen) */
     .video-card {
-        background-color: #1e1e1e; /* Màu nền đen xám */
-        border-radius: 15px;
-        padding: 0px;
-        color: white;
-        margin-bottom: 20px;
-        overflow: hidden;
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-        border: 1px solid #333;
+        background-color: #1e1e1e; color: white;
+        border-radius: 12px; margin-bottom: 10px; overflow: hidden;
+        border: 1px solid #333; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
-    .video-img {
-        width: 100%;
-        height: auto;
-        border-bottom: 1px solid #333;
-    }
-    .card-content {
-        padding: 15px;
-    }
-    .video-title {
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 15px;
-        height: 50px; /* Cố định chiều cao tiêu đề */
-        overflow: hidden;
-        text-transform: uppercase;
+    .video-img { width: 100%; border-bottom: 1px solid #333; }
+    .card-content { padding: 12px; }
+    .video-title { 
+        font-size: 14px; font-weight: bold; margin-bottom: 10px; 
+        height: 40px; overflow: hidden; text-transform: uppercase;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
         color: #fff;
     }
-    .stat-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 8px;
-        font-size: 14px;
-        color: #ccc;
-    }
-    .stat-val {
-        font-weight: bold;
-        color: #4CAF50; /* Màu xanh lá cho số liệu */
-    }
-    .footer-date {
-        font-size: 11px;
-        color: #666;
-        text-align: right;
-        margin-top: 10px;
-    }
+    .stat-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 13px; color: #ccc; }
+    .live-badge { background-color: #ff4b4b; color: white; padding: 1px 6px; border-radius: 4px; font-size: 10px; margin-left: 5px; vertical-align: middle; }
+    
+    /* Màu số liệu */
+    .yt-color { color: #FF0000 !important; }
+    .sp-color { color: #1DB954 !important; }
+    .fb-color { color: #1877F2 !important; }
 </style>
 """, unsafe_allow_html=True)
 
-st.title("👑 PMC Data Center")
+st.title("👑 PMC Data Center (Real-Time)")
 st.caption(f"Last Update: {datetime.datetime.now().strftime('%H:%M:%S')}")
 
 # --- KHỞI TẠO STATE ---
-if 'view_sim' not in st.session_state:
-    df, latest = load_data()
+if 'init_done' not in st.session_state:
+    # 1. Load Tổng
+    df, latest = load_sheet_data()
     st.session_state['df'] = df
     st.session_state['latest'] = latest
-
-# --- PHẦN 1: VIDEO NỔI BẬT (GIAO DIỆN MỚI) ---
-st.subheader("🎬 Video Nổi Bật (Album Collection)")
-
-# Lấy dữ liệu 3 video
-video_stats = get_video_details(VIDEO_IDS)
-
-if video_stats:
-    cols = st.columns(3) # Chia làm 3 cột
-    for i, vid in enumerate(video_stats):
-        with cols[i]:
-            # HTML Tạo Card
-            st.markdown(f"""
-            <div class="video-card">
-                <img src="{vid['thumb']}" class="video-img">
-                <div class="card-content">
-                    <div class="video-title">{vid['title']}</div>
-                    <div class="stat-row">
-                        <span>Lượt xem:</span>
-                        <span class="stat-val" style="color: #3b82f6;">{vid['view']}</span>
-                    </div>
-                    <div class="stat-row">
-                        <span>Lượt thích:</span>
-                        <span class="stat-val" style="color: #10b981;">{vid['like']}</span>
-                    </div>
-                    <div class="stat-row">
-                        <span>Bình luận:</span>
-                        <span class="stat-val" style="color: #f59e0b;">{vid['comment']}</span>
-                    </div>
-                    <div class="footer-date">Ngày đăng: {vid['published']}</div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-else:
-    st.warning("⚠️ Chưa load được Video. Hãy kiểm tra lại ID Video trong code.")
-
-st.divider()
-
-# --- PHẦN 2: THỐNG KÊ TỔNG (Như cũ) ---
-tab1, tab2 = st.tabs(["🔥 LIVE DASHBOARD", "📈 BIỂU ĐỒ"])
-
-with tab2:
-    if 'df' in st.session_state and not st.session_state['df'].empty:
-        df_chart = st.session_state['df']
-        fig_view = px.line(df_chart, x='Time', y='Youtube_View', title='Youtube Views Growth')
-        fig_view.update_traces(line_color='#FF0000')
-        st.plotly_chart(fig_view, use_container_width=True)
-
-with tab1:
-    latest = st.session_state['latest']
+    # Khởi tạo số view tổng để nhảy
     if latest is not None:
-        c1, c2, c3 = st.columns(3)
-        c1.metric("Youtube Views", "{:,}".format(latest['Youtube_View']))
-        c2.metric("Youtube Subs", "{:,}".format(latest['Youtube_Sub']))
-        c3.metric("Spotify", "{:,}".format(latest['Spotify_Listener']))
+        st.session_state['total_view_sim'] = int(latest['Youtube_View'])
+    else:
+        st.session_state['total_view_sim'] = 0
         
-        c4, c5, c6 = st.columns(3)
-        c4.metric("TikTok", "{:,}".format(latest['TikTok_Follower']))
-        c5.metric("Facebook", "{:,}".format(latest['Facebook_Follower']))
-        c6.metric("Total Videos", latest['Youtube_Video'])
+    # 2. Load 3 Video lẻ
+    st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
+    st.session_state['init_done'] = True
+
+# --- TẠO KHUNG CHỨA (PLACEHOLDERS) ---
+# Quan trọng: Tạo khung sẵn để update nội dung vào đây mà không bị giật trang
+video_container = st.empty()
+st.divider()
+metrics_container = st.empty()
+
+# --- VÒNG LẶP REAL-TIME ---
+while True:
+    # === 1. TÍNH TOÁN NHẢY SỐ (SIMULATION) ===
+    
+    # A. Nhảy số View Tổng (Cái bạn cần đây!)
+    st.session_state['total_view_sim'] += random.randint(1, 10)
+    
+    # B. Nhảy số 3 Video lẻ
+    if 'video_data' in st.session_state:
+        for vid_id in st.session_state['video_data']:
+            st.session_state['video_data'][vid_id]['view'] += random.randint(0, 3)
+
+    # === 2. ĐỒNG BỘ DATA THẬT (MỖI 60 GIÂY) ===
+    if int(time.time()) % 60 == 0:
+        # Load lại Sheet
+        df_new, latest_new = load_sheet_data()
+        if latest_new is not None:
+            st.session_state['latest'] = latest_new
+            # Reset số tổng về số thật nếu lệch quá xa
+            real_val = int(latest_new['Youtube_View'])
+            if real_val > st.session_state['total_view_sim']:
+                 st.session_state['total_view_sim'] = real_val
+        
+        # Load lại API Video
+        real_video_data = fetch_video_data_api(VIDEO_IDS)
+        for vid_id, data in real_video_data.items():
+            if data['view'] > st.session_state['video_data'].get(vid_id, {}).get('view', 0):
+                st.session_state['video_data'][vid_id] = data
+
+    # === 3. VẼ GIAO DIỆN ===
+    
+    # A. Vẽ 3 Video Card
+    with video_container.container():
+        st.subheader("🎬 Top Videos Collection")
+        cols = st.columns(3)
+        v_data = st.session_state['video_data']
+        for i, vid_id in enumerate(VIDEO_IDS):
+            if vid_id in v_data:
+                info = v_data[vid_id]
+                v_view = "{:,}".format(info['view']).replace(',', '.')
+                v_like = "{:,}".format(info['like']).replace(',', '.')
+                v_comm = "{:,}".format(info['comment']).replace(',', '.')
+                
+                with cols[i % 3]:
+                    st.markdown(f"""
+                    <div class="video-card">
+                        <img src="{info['thumb']}" class="video-img">
+                        <div class="card-content">
+                            <div class="video-title">{info['title']}</div>
+                            <div class="stat-row">
+                                <span>Views <span class="live-badge">LIVE</span></span>
+                                <span style="color: #3b82f6; font-weight:bold;">{v_view}</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>Likes</span>
+                                <span style="color: #10b981; font-weight:bold;">{v_like}</span>
+                            </div>
+                            <div class="stat-row">
+                                <span>Comments</span>
+                                <span style="color: #f59e0b; font-weight:bold;">{v_comm}</span>
+                            </div>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+    # B. Vẽ View Tổng và Chỉ số khác
+    with metrics_container.container():
+        st.subheader("🔥 Kênh Tổng Hợp")
+        lat = st.session_state['latest']
+        if lat is not None:
+            c1, c2, c3 = st.columns(3)
+            # Ở ĐÂY: Dùng biến total_view_sim để hiển thị -> Sẽ thấy nó nhảy liên tục
+            c1.markdown(f"""<div class="metric-card"><div class="metric-label">Youtube Views <span class="live-badge">LIVE</span></div><div class="metric-value yt-color">{st.session_state['total_view_sim']:,}</div></div>""", unsafe_allow_html=True)
+            c2.markdown(f"""<div class="metric-card"><div class="metric-label">Youtube Subs</div><div class="metric-value">{lat['Youtube_Sub']:,}</div></div>""", unsafe_allow_html=True)
+            c3.markdown(f"""<div class="metric-card"><div class="metric-label">Spotify Listeners</div><div class="metric-value sp-color">{lat['Spotify_Listener']:,}</div></div>""", unsafe_allow_html=True)
+            
+            c4, c5, c6 = st.columns(3)
+            c4.markdown(f"""<div class="metric-card"><div class="metric-label">TikTok Followers</div><div class="metric-value">{lat['TikTok_Follower']:,}</div></div>""", unsafe_allow_html=True)
+            c5.markdown(f"""<div class="metric-card"><div class="metric-label">Facebook Followers</div><div class="metric-value fb-color">{lat['Facebook_Follower']:,}</div></div>""", unsafe_allow_html=True)
+            c6.markdown(f"""<div class="metric-card"><div class="metric-label">Total Videos</div><div class="metric-value">{lat['Youtube_Video']}</div></div>""", unsafe_allow_html=True)
+
+    # C. Nghỉ 1 giây rồi lặp lại
+    time.sleep(1)
