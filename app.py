@@ -12,7 +12,11 @@ import json
 # --- CẤU HÌNH ---
 SHEET_NAME = 'PMC Data Center'
 # Thay 3 ID Video của bạn vào đây:
-VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8']
+VIDEO_IDS = [
+    'k3C6-1f9gHw',  # Video 1
+    'sJytolUBttX8', # Video 2
+    '7P6Wv5_o-2Q'   # Video 3
+]
 YOUTUBE_API_KEY = 'AIzaSyAueu53W-r0VWcYJwYrSSboOKuWYQfLn34' 
 
 # --- HÀM 1: LẤY DATA 3 VIDEO (API) ---
@@ -122,12 +126,11 @@ if 'init_done' not in st.session_state:
     else:
         st.session_state['total_view_sim'] = 0
         
-    # 2. Load 3 Video lẻ
+    # 2. Load 3 Video lẻ (Lần đầu)
     st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
     st.session_state['init_done'] = True
 
 # --- TẠO KHUNG CHỨA (PLACEHOLDERS) ---
-# Quan trọng: Tạo khung sẵn để update nội dung vào đây mà không bị giật trang
 video_container = st.empty()
 st.divider()
 metrics_container = st.empty()
@@ -136,34 +139,28 @@ metrics_container = st.empty()
 while True:
     # === 1. TÍNH TOÁN NHẢY SỐ (SIMULATION) ===
     
-    # A. Nhảy số View Tổng (Cái bạn cần đây!)
+    # A. CHỈ Nhảy số View Tổng (View kênh)
     st.session_state['total_view_sim'] += random.randint(1, 10)
     
-    # B. Nhảy số 3 Video lẻ
-    if 'video_data' in st.session_state:
-        for vid_id in st.session_state['video_data']:
-            st.session_state['video_data'][vid_id]['view'] += random.randint(0, 3)
+    # B. KHÔNG Nhảy số Video lẻ nữa (Đã xóa đoạn code random)
 
     # === 2. ĐỒNG BỘ DATA THẬT (MỖI 60 GIÂY) ===
     if int(time.time()) % 60 == 0:
-        # Load lại Sheet
+        # Load lại Sheet (Tổng)
         df_new, latest_new = load_sheet_data()
         if latest_new is not None:
             st.session_state['latest'] = latest_new
-            # Reset số tổng về số thật nếu lệch quá xa
             real_val = int(latest_new['Youtube_View'])
             if real_val > st.session_state['total_view_sim']:
                  st.session_state['total_view_sim'] = real_val
         
-        # Load lại API Video
+        # Load lại API Video (Cập nhật số liệu thực tế cho 3 video)
         real_video_data = fetch_video_data_api(VIDEO_IDS)
-        for vid_id, data in real_video_data.items():
-            if data['view'] > st.session_state['video_data'].get(vid_id, {}).get('view', 0):
-                st.session_state['video_data'][vid_id] = data
+        st.session_state['video_data'] = real_video_data
 
     # === 3. VẼ GIAO DIỆN ===
     
-    # A. Vẽ 3 Video Card
+    # A. Vẽ 3 Video Card (Số Tĩnh)
     with video_container.container():
         st.subheader("🎬 Top Videos Collection")
         cols = st.columns(3)
@@ -182,8 +179,7 @@ while True:
                         <div class="card-content">
                             <div class="video-title">{info['title']}</div>
                             <div class="stat-row">
-                                <span>Views <span class="live-badge">LIVE</span></span>
-                                <span style="color: #3b82f6; font-weight:bold;">{v_view}</span>
+                                <span>Views</span> <span style="color: #3b82f6; font-weight:bold;">{v_view}</span>
                             </div>
                             <div class="stat-row">
                                 <span>Likes</span>
@@ -197,13 +193,13 @@ while True:
                     </div>
                     """, unsafe_allow_html=True)
 
-    # B. Vẽ View Tổng và Chỉ số khác
+    # B. Vẽ View Tổng (Số Nhảy)
     with metrics_container.container():
         st.subheader("🔥 Kênh Tổng Hợp")
         lat = st.session_state['latest']
         if lat is not None:
             c1, c2, c3 = st.columns(3)
-            # Ở ĐÂY: Dùng biến total_view_sim để hiển thị -> Sẽ thấy nó nhảy liên tục
+            # View tổng vẫn giữ hiệu ứng LIVE
             c1.markdown(f"""<div class="metric-card"><div class="metric-label">Youtube Views <span class="live-badge">LIVE</span></div><div class="metric-value yt-color">{st.session_state['total_view_sim']:,}</div></div>""", unsafe_allow_html=True)
             c2.markdown(f"""<div class="metric-card"><div class="metric-label">Youtube Subs</div><div class="metric-value">{lat['Youtube_Sub']:,}</div></div>""", unsafe_allow_html=True)
             c3.markdown(f"""<div class="metric-card"><div class="metric-label">Spotify Listeners</div><div class="metric-value sp-color">{lat['Spotify_Listener']:,}</div></div>""", unsafe_allow_html=True)
@@ -213,5 +209,4 @@ while True:
             c5.markdown(f"""<div class="metric-card"><div class="metric-label">Facebook Followers</div><div class="metric-value fb-color">{lat['Facebook_Follower']:,}</div></div>""", unsafe_allow_html=True)
             c6.markdown(f"""<div class="metric-card"><div class="metric-label">Total Videos</div><div class="metric-value">{lat['Youtube_Video']}</div></div>""", unsafe_allow_html=True)
 
-    # C. Nghỉ 1 giây rồi lặp lại
     time.sleep(1)
