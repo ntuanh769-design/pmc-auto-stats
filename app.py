@@ -225,7 +225,7 @@ with tab_home:
 <div class="profile-section">
     <img src="{AVATAR_URL}" class="avatar">
     <div class="artist-name">PHƯƠNG MỸ CHI</div>
-    <div style="color:#BBB; margin-top:5px;">Cô bé dân ca" ngày nào giờ đã trở thành một biểu tượng âm nhạc trẻ trung, năng động và đầy sáng tạo</div>
+    <div style="color:#BBB; margin-top:5px;">"Cô bé dân ca" ngày nào giờ đã trở thành một biểu tượng âm nhạc trẻ trung, năng động và đầy sáng tạo</div>
     <div class="social-links">
         <a href="{SOCIAL_LINKS['facebook']}" target="_blank" class="social-icon">{svg_icons['facebook']}</a>
         <a href="{SOCIAL_LINKS['instagram']}" target="_blank" class="social-icon">{svg_icons['instagram']}</a>
@@ -249,12 +249,17 @@ with tab_about:
     c1, c2 = st.columns([1, 2])
     with c1: st.image(AVATAR_URL, width=300)
     with c2:
-        st.markdown("""
-        ### PHƯƠNG MỸ CHI
-        **Phương Mỹ Chi** (sinh năm 2003) là ngôi sao sáng của dòng nhạc dân ca và nhạc nhẹ Việt Nam. Nổi lên từ danh hiệu Á quân *Giọng hát Việt nhí 2013*, cô đã chinh phục khán giả bằng chất giọng ngọt ngào và cảm xúc.
-        
-        Năm 2024-2025, Phương Mỹ Chi lột xác ngoạn mục với album *Vũ Trụ Cò Bay*, kết hợp táo bạo giữa văn học, văn hóa truyền thống và âm nhạc điện tử hiện đại.
-        """)
+        sst.markdown("""
+    ### 🌟 HÀNH TRÌNH ÂM NHẠC
+    
+    **Phuong My Chi** (sinh năm 2003) là một nữ ca sĩ nổi tiếng Việt Nam, được biết đến rộng rãi sau khi đạt danh hiệu Á quân chương trình *Giọng hát Việt nhí* mùa đầu tiên (2013).
+    
+    * **2013:** Á quân The Voice Kids Vietnam. Gây bão với "Quê Em Mùa Nước Lũ".
+    * **2014-2020:** Theo đuổi dòng nhạc dân ca, trữ tình. Phát hành nhiều album thành công như "Thương về miền Trung", "Chờ người". Đạt giải Mai Vàng, Cống Hiến.
+    * **2022-Nay:** Lột xác mạnh mẽ về hình ảnh và phong cách âm nhạc. Kết hợp giữa chất liệu truyền thống và âm nhạc điện tử hiện đại.
+    
+    **Dấu ấn gần đây:** Album "Vũ Trụ Cò Bay" (2023) là một cú hích lớn, khẳng định tư duy âm nhạc độc đáo và trưởng thành của Phương Mỹ Chi.
+    """)
     st.markdown('</div>', unsafe_allow_html=True)
 
 # --- TAB LỊCH TRÌNH ---
@@ -334,20 +339,23 @@ while True:
                 if vid_id in v_data:
                     d = v_data[vid_id]
                     with cols[i % 3]:
+                        # HTML cấu trúc card mới
                         st.markdown(f"""
-                        <div class="video-card">
-                            <a href="https://www.youtube.com/watch?v={d['id']}" target="_blank">
-                                <div class="vid-thumb-wrapper">
-                                    <img src="{d['thumb']}" class="vid-thumb">
-                                    <div class="vid-play-icon">▶</div>
-                                </div>
-                            </a>
-                            <div class="vid-content">
-                                <div class="vid-title">{d['title']}</div>
-                                <div class="vid-footer">
-                                    <span class="stat-view">👁️ {d['view']:,}</span>
-                                    <span class="stat-like">❤ {d['like']:,}</span>
-                                    <span class="stat-comment">💬 {d['comment']:,}</span>
+                        <div class="video-card-container">
+                            <div class="video-card">
+                                <a href="https://www.youtube.com/watch?v={d['id']}" target="_blank" class="vid-link">
+                                    <div class="vid-thumb-wrapper">
+                                        <img src="{d['thumb']}" class="vid-thumb">
+                                        <div class="vid-play-icon">▶</div>
+                                    </div>
+                                </a>
+                                <div class="vid-content">
+                                    <div class="vid-title">{d['title']}</div>
+                                    <div class="vid-footer">
+                                        <div class="stat-item stat-view">👁️ {d['view']:,}</div>
+                                        <div class="stat-item stat-like">❤ {d['like']:,}</div>
+                                        <div class="stat-item stat-comment">💬 {d['comment']:,}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -355,19 +363,17 @@ while True:
 
     time.sleep(1)
 
-# FOOTER (Sẽ hiển thị nếu thoát vòng lặp, hoặc dùng container khác nếu cần)
-st.markdown("""
-<div class="footer-container">
-    <div class="footer-content">
-        <div class="footer-left">
-            <h3>WINGS for PMC</h3>
-            <p>Kết nối cùng cộng đồng fan và thưởng thức âm nhạc chất lượng.</p>
+# 4. FOOTER (Luôn hiển thị cuối trang)
+    # Dùng empty container để footer không bị đẩy lên khi nội dung thay đổi
+    footer_container = st.empty()
+    with footer_container.container():
+        st.divider()
+        st.markdown("""
+        <div class="custom-footer">
+            <div class="footer-links">
+                <a href="#">Trang chủ</a> | <a href="#">Liên hệ</a> | <a href="#">Điều khoản</a> | <a href="#">Bảo mật</a>
+            </div>
+            <p style="margin-top: 20px;">© 2026 Nhi Nha Nhi Nhô Cùng Mỹ Chi. </p>
+            <p style="font-size: 12px; color: #666;">Designed for PMC Fandom.</p>
         </div>
-        <div class="footer-right">
-            <h3>Liên hệ</h3>
-            <p>Email: nhinhanhinhocungmychi@gmail.com</p>
-        </div>
-    </div>
-    <div class="copyright">© 2026 NhinhanhinhocungMyChi.</div>
-</div>
-""", unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
