@@ -10,14 +10,12 @@ import plotly.express as px
 import json
 
 # ==========================================
-# --- 1. CẤU HÌNH (ĐÃ CẬP NHẬT THEO DỮ LIỆU CỦA BẠN) ---
+# --- 1. CẤU HÌNH ---
 # ==========================================
 SHEET_NAME = 'PMC Data Center'
-# ID Video của bạn
 VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8'] 
 YOUTUBE_API_KEY = 'AIzaSyAueu53W-r0VWcYJwYrSSboOKuWYQfLn34' 
 
-# Link ảnh & Mạng xã hội của bạn
 BANNER_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/600369698_1419646709529546_341344486868245985_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeE8R8ouge4yL7lfWGQ5Kzk1Enry68g3cr0SevLryDdyvaWspFlBItEaOUW321Od9poGbHjYncGX9_MS7BEcv6Ww&_nc_ohc=WHolhcYE84IQ7kNvwH3WDS7&_nc_oc=AdlMDmMAztdFXjYHzVG6BJpmRMy1E7qVPlz3DWxOrwo2YrZS0MeRHLPCU2rF4_OdTXE&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=AXvAnGOph6iEFu_TWBD-SA&oh=00_AfoafS9eKG1wduMrKvUIYzK6Mu4ZIs0Q3Idtuj5CW5qvEg&oe=696F8D56"
 AVATAR_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/482242951_1184903749670511_116581152088062484_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHl6z1Zf722SPdydZ2cSXjkZpHk_q-4D51mkeT-r7gPndTlCsa2S-9POMvKIBb4ckII1tv_ascEHrs3kes9q9GO&_nc_ohc=0KAgPDwqVoYQ7kNvwGvYZzT&_nc_oc=AdkiSSI5Nm1z4L60wjOWhF2RlhO42CTckj5fJghrGNCIl1rRcnH9YUwQDlrcIYwvWshnvTSvZ0pqlV2sGzg6tPGG&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=VKwmNPd5x84LUuWGX44UBw&oh=00_AfpI8odqVyRf4fYhFFiablQhci6WR8tZfRwbNfW2uoUEig&oe=696F885F"
 
@@ -30,7 +28,7 @@ SOCIAL_LINKS = {
 }
 
 # ==========================================
-# --- 2. CÁC HÀM XỬ LÝ DỮ LIỆU ---
+# --- 2. HÀM XỬ LÝ SỐ LIỆU ---
 # ==========================================
 def fetch_video_data_api(video_ids):
     data_map = {}
@@ -46,11 +44,9 @@ def fetch_video_data_api(video_ids):
             stats = item['statistics']
             snippet = item['snippet']
             
-            # Lấy ngày đăng và format lại (để hiển thị ở Footer card video)
             try:
-                pub_raw = snippet['publishedAt'] # Dạng: 2024-01-15T10:00:00Z
+                pub_raw = snippet['publishedAt'] 
                 dt = datetime.datetime.strptime(pub_raw, "%Y-%m-%dT%H:%M:%SZ")
-                # Chuyển sang giờ VN (UTC+7)
                 dt = dt + datetime.timedelta(hours=7)
                 pub_fmt = dt.strftime("%d/%m/%Y %H:%M")
             except:
@@ -97,108 +93,53 @@ def load_sheet_data():
     except: return pd.DataFrame(), None
 
 # ==========================================
-# --- 3. GIAO DIỆN & CSS (STYLE MỚI) ---
+# --- 3. CSS TÙY CHỈNH ---
 # ==========================================
 st.set_page_config(page_title="Phuong My Chi Official", page_icon="👑", layout="wide")
 
-# CSS Styling
 st.markdown("""
 <style>
-    /* RESET & LAYOUT */
+    /* RESET */
     #MainMenu, header, footer {visibility: hidden;}
     .stApp { background-color: #0E1117; color: #E0E0E0; font-family: sans-serif; }
-    .block-container { 
-        padding-top: 0px !important; 
-        padding-left: 0px !important; 
-        padding-right: 0px !important; 
-        max-width: 100% !important; 
-    }
+    .block-container { padding: 0 !important; max-width: 100% !important; }
 
-    /* NAVIGATION (TABS TRÊN CÙNG) */
-    .stTabs { 
-        background-color: #0E1117; 
-        position: sticky; top: 0; z-index: 999; 
-        padding-top: 10px; border-bottom: 1px solid #333; 
-    }
+    /* NAVIGATION */
+    .stTabs { background: #0E1117; position: sticky; top: 0; z-index: 999; padding-top: 10px; border-bottom: 1px solid #333; }
     .stTabs [data-baseweb="tab-list"] { justify-content: center; gap: 30px; }
-    .stTabs [data-baseweb="tab"] { 
-        background-color: transparent; border: none; 
-        color: #AAAAAA; font-weight: 700; font-size: 16px; text-transform: uppercase; 
-    }
-    .stTabs [aria-selected="true"] { 
-        color: #FFFFFF !important; border-bottom: 3px solid #FFD700 !important; 
-    }
+    .stTabs [data-baseweb="tab"] { background: transparent; border: none; color: #AAA; font-weight: 700; font-size: 16px; text-transform: uppercase; }
+    .stTabs [aria-selected="true"] { color: #FFF !important; border-bottom: 3px solid #FFD700 !important; }
 
-    /* BANNER FULL WIDTH */
-    .banner-container { 
-        width: 100vw; height: 500px; 
-        position: relative; left: 50%; right: 50%; 
-        margin-left: -50vw; margin-right: -50vw; 
-        overflow: hidden; 
-    }
-    .banner-img { 
-        width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); 
-    }
-
-    /* PROFILE OVERLAY */
-    .profile-section { 
-        margin-top: -120px; text-align: center; position: relative; z-index: 10; padding-bottom: 30px; 
-    }
-    .avatar { 
-        border-radius: 50%; width: 160px; height: 160px; object-fit: cover; 
-        border: 4px solid #FFD700; background: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.6); 
-    }
+    /* BANNER */
+    .banner-container { width: 100vw; height: 500px; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; overflow: hidden; }
+    .banner-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); }
+    .profile-section { margin-top: -120px; text-align: center; position: relative; z-index: 10; padding-bottom: 30px; }
+    .avatar { border-radius: 50%; width: 160px; height: 160px; object-fit: cover; border: 4px solid #FFD700; background: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.6); }
     .artist-name { font-size: 48px; font-weight: 900; color: #FFF; margin: 10px 0 0 0; }
     .social-links { display: flex; gap: 20px; justify-content: center; margin-top: 15px; }
     .social-icon svg { fill: #AAA; transition: all 0.3s; }
     .social-icon:hover svg { fill: #FFF; transform: translateY(-3px); }
 
-    /* === VIDEO CARD STYLE (DỌC - GIỐNG HÌNH YÊU CẦU) === */
-    .video-card {
-        background-color: #1A1A1A; /* Nền xám đen */
-        border-radius: 10px; overflow: hidden;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        border: 1px solid #333;
-    }
-    .vid-thumb-wrapper {
-        position: relative; width: 100%; padding-top: 56.25%; background-color: #000;
-    }
-    .vid-thumb {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
-        opacity: 0.85; transition: opacity 0.3s;
-    }
+    /* VIDEO CARD */
+    .video-card { background: #1A1A1A; border-radius: 10px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); border: 1px solid #333; }
+    .vid-thumb-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
+    .vid-thumb { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.85; transition: 0.3s; }
     .video-card:hover .vid-thumb { opacity: 1; }
-    
     .vid-body { padding: 15px; }
-    
-    /* Title */
-    .vid-title {
-        font-size: 15px; font-weight: 700; color: #FFFFFF;
-        text-transform: uppercase; line-height: 1.4; margin-bottom: 4px;
-        height: 42px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-    }
+    .vid-title { font-size: 15px; font-weight: 700; color: #FFF; text-transform: uppercase; line-height: 1.4; margin-bottom: 4px; height: 42px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
     .vid-artist { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; margin-bottom: 15px; }
-    
-    /* Stats Rows (Dọc) */
     .stat-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 14px; }
     .stat-label { color: #BBB; font-weight: 500; }
-    
-    .val-view { color: #64B5F6; font-weight: 700; } /* Xanh dương */
-    .val-like { color: #81C784; font-weight: 700; } /* Xanh lá */
-    .val-comm { color: #FFD54F; font-weight: 700; } /* Vàng */
-    
-    .vid-footer {
-        border-top: 1px solid #333; padding-top: 12px; margin-top: 12px;
-        font-size: 11px; color: #666; text-align: right;
-    }
+    .val-view { color: #64B5F6; font-weight: 700; }
+    .val-like { color: #81C784; font-weight: 700; }
+    .val-comm { color: #FFD54F; font-weight: 700; }
+    .vid-footer { border-top: 1px solid #333; padding-top: 12px; margin-top: 12px; font-size: 11px; color: #666; text-align: right; }
 
     /* OTHERS */
     .metric-card { background: #16181C; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #333; }
     .metric-val { font-size: 28px; font-weight: 800; color: white; }
     .metric-lbl { font-size: 12px; text-transform: uppercase; color: #888; font-weight: bold; }
     .live-dot { height: 8px; width: 8px; background: #FF4B4B; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
-    
     .main-content { padding: 0 40px; }
     .calendar-container { background: #1A1F26; padding: 25px; border-radius: 20px; max-width: 800px; margin: 0 auto; border: 1px solid #333; }
     .cal-header { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px; color: white; }
@@ -206,13 +147,11 @@ st.markdown("""
     .cal-cell { background: #242B35; color: white; padding: 15px 0; border-radius: 10px; font-weight: bold; cursor: pointer; }
     .cal-cell:hover { background: #FFD700; color: black; }
     .cal-head { color: #888; font-weight: bold; padding-bottom: 10px; }
-    
     .footer-container { background: #000; padding: 50px; margin-top: 50px; border-top: 1px solid #222; }
     .footer-content { display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto; }
     .footer-left h3, .footer-right h3 { color: white; margin-bottom: 10px; }
     .footer-left p, .footer-right p { color: #888; font-size: 14px; }
     .copyright { text-align: center; border-top: 1px solid #222; padding-top: 20px; margin-top: 30px; color: #555; font-size: 12px; }
-    
     @keyframes blink { 0% {opacity:1} 50% {opacity:0.4} 100% {opacity:1} }
 </style>
 """, unsafe_allow_html=True)
@@ -227,7 +166,7 @@ svg_icons = {
 }
 
 # ==========================================
-# --- 4. KHỞI TẠO STATE ---
+# --- 4. STATE & LOGIC ---
 # ==========================================
 if 'init_done' not in st.session_state:
     df, latest = load_sheet_data()
@@ -238,15 +177,11 @@ if 'init_done' not in st.session_state:
     st.session_state['init_done'] = True
 
 # ==========================================
-# --- 5. MAIN LAYOUT (TABS TRÊN CÙNG) ---
+# --- 5. MAIN LAYOUT ---
 # ==========================================
-tab_home, tab_about, tab_schedule, tab_stats, tab_vote = st.tabs([
-    "TRANG CHỦ", "GIỚI THIỆU", "LỊCH TRÌNH", "THỐNG KÊ", "VOTING"
-])
+tab_home, tab_about, tab_schedule, tab_stats, tab_vote = st.tabs(["TRANG CHỦ", "GIỚI THIỆU", "LỊCH TRÌNH", "THỐNG KÊ", "VOTING"])
 
-# --- TAB TRANG CHỦ ---
 with tab_home:
-    # Banner
     st.markdown(f"""
     <div class="banner-container"><img src="{BANNER_URL}" class="banner-img"></div>
     <div class="profile-section">
@@ -287,20 +222,21 @@ with tab_about:
 # --- TAB LỊCH TRÌNH ---
 with tab_schedule:
     st.markdown('<div class="main-content" style="margin-top:40px">', unsafe_allow_html=True)
+    # QUAN TRỌNG: HTML không thụt dòng để tránh lỗi hiển thị code block
     st.markdown("""
-    <div class="calendar-container">
-        <div class="cal-header">January 2026</div>
-        <div class="cal-grid">
-            <div class="cal-head">T2</div><div class="cal-head">T3</div><div class="cal-head">T4</div><div class="cal-head">T5</div><div class="cal-head">T6</div><div class="cal-head">T7</div><div class="cal-head">CN</div>
-            <div class="cal-cell cal-empty"></div><div class="cal-cell cal-empty"></div><div class="cal-cell cal-empty"></div>
-            <div class="cal-cell">1</div><div class="cal-cell">2</div><div class="cal-cell">3</div><div class="cal-cell">4</div>
-            <div class="cal-cell">5</div><div class="cal-cell">6</div><div class="cal-cell">7</div><div class="cal-cell">8</div><div class="cal-cell">9</div><div class="cal-cell">10</div><div class="cal-cell">11</div>
-            <div class="cal-cell">12</div><div class="cal-cell">13</div><div class="cal-cell">14</div><div class="cal-cell">15</div><div class="cal-cell">16</div><div class="cal-cell">17</div><div class="cal-cell">18</div>
-            <div class="cal-cell">19</div><div class="cal-cell">20</div><div class="cal-cell">21</div><div class="cal-cell">22</div><div class="cal-cell">23</div><div class="cal-cell">24</div><div class="cal-cell">25</div>
-            <div class="cal-cell">26</div><div class="cal-cell">27</div><div class="cal-cell">28</div><div class="cal-cell">29</div><div class="cal-cell">30</div><div class="cal-cell">31</div><div class="cal-cell cal-empty"></div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+<div class="calendar-container">
+<div class="cal-header">January 2026</div>
+<div class="cal-grid">
+<div class="cal-head">T2</div><div class="cal-head">T3</div><div class="cal-head">T4</div><div class="cal-head">T5</div><div class="cal-head">T6</div><div class="cal-head">T7</div><div class="cal-head">CN</div>
+<div class="cal-cell cal-empty"></div><div class="cal-cell cal-empty"></div><div class="cal-cell cal-empty"></div>
+<div class="cal-cell">1</div><div class="cal-cell">2</div><div class="cal-cell">3</div><div class="cal-cell">4</div>
+<div class="cal-cell">5</div><div class="cal-cell">6</div><div class="cal-cell">7</div><div class="cal-cell">8</div><div class="cal-cell">9</div><div class="cal-cell">10</div><div class="cal-cell">11</div>
+<div class="cal-cell">12</div><div class="cal-cell">13</div><div class="cal-cell">14</div><div class="cal-cell">15</div><div class="cal-cell">16</div><div class="cal-cell">17</div><div class="cal-cell">18</div>
+<div class="cal-cell">19</div><div class="cal-cell">20</div><div class="cal-cell">21</div><div class="cal-cell">22</div><div class="cal-cell">23</div><div class="cal-cell">24</div><div class="cal-cell">25</div>
+<div class="cal-cell">26</div><div class="cal-cell">27</div><div class="cal-cell">28</div><div class="cal-cell">29</div><div class="cal-cell">30</div><div class="cal-cell">31</div><div class="cal-cell cal-empty"></div>
+</div>
+</div>
+""", unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
 # --- TAB THỐNG KÊ ---
@@ -342,7 +278,7 @@ while True:
                 st.session_state['total_view_sim'] = int(latest_new['Youtube_View'])
         st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
 
-    # Render Home Data
+    # Render
     lat = st.session_state['latest']
     if lat is not None:
         with metrics_placeholder.container():
@@ -359,53 +295,51 @@ while True:
                 if vid_id in v_data:
                     d = v_data[vid_id]
                     with cols[i % 3]:
-                        # HTML CARD STYLE MỚI (DỌC - Vertical Layout)
+                        # NEW VIDEO CARD HTML STRUCTURE (CLEAN INDENTATION)
                         st.markdown(f"""
-                        <div class="video-card">
-                            <a href="https://www.youtube.com/watch?v={d['id']}" target="_blank">
-                                <div class="vid-thumb-wrapper">
-                                    <img src="{d['thumb']}" class="vid-thumb">
-                                </div>
-                            </a>
-                            <div class="vid-body">
-                                <div class="vid-title">{d['title']}</div>
-                                <div class="vid-artist">PHƯƠNG MỸ CHI</div>
-                                
-                                <div class="stat-row">
-                                    <span class="stat-label">Lượt xem:</span>
-                                    <span class="val-view">{d['view']:,}</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label">Lượt thích:</span>
-                                    <span class="val-like">{d['like']:,}</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label">Bình luận:</span>
-                                    <span class="val-comm">{d['comment']:,}</span>
-                                </div>
-                                
-                                <div class="vid-footer">
-                                    Thêm vào: {d['published']}
-                                </div>
-                            </div>
-                        </div>
-                        """, unsafe_allow_html=True)
+<div class="video-card">
+<a href="https://www.youtube.com/watch?v={d['id']}" target="_blank">
+<div class="vid-thumb-wrapper">
+<img src="{d['thumb']}" class="vid-thumb">
+</div>
+</a>
+<div class="vid-body">
+<div class="vid-title">{d['title']}</div>
+<div class="vid-artist">PHƯƠNG MỸ CHI</div>
+<div class="stat-row">
+<span class="stat-label">Lượt xem:</span>
+<span class="val-view">{d['view']:,}</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">Lượt thích:</span>
+<span class="val-like">{d['like']:,}</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">Bình luận:</span>
+<span class="val-comm">{d['comment']:,}</span>
+</div>
+<div class="vid-footer">
+Thêm vào: {d['published']}
+</div>
+</div>
+</div>
+""", unsafe_allow_html=True)
 
     time.sleep(1)
 
 # FOOTER
 st.markdown("""
 <div class="footer-container">
-    <div class="footer-content">
-        <div class="footer-left">
-            <h3>WINGS for PMC</h3>
-            <p>Kết nối cùng cộng đồng fan và thưởng thức âm nhạc chất lượng.</p>
-        </div>
-        <div class="footer-right">
-            <h3>Liên hệ</h3>
-            <p>Email: booking@phuongmychi.com</p>
-        </div>
-    </div>
-    <div class="copyright">© 2026 WINGSforPMC.</div>
+<div class="footer-content">
+<div class="footer-left">
+<h3>WINGS for PMC</h3>
+<p>Kết nối cùng cộng đồng fan và thưởng thức âm nhạc chất lượng.</p>
+</div>
+<div class="footer-right">
+<h3>Liên hệ</h3>
+<p>Email: booking@phuongmychi.com</p>
+</div>
+</div>
+<div class="copyright">© 2026 WINGSforPMC.</div>
 </div>
 """, unsafe_allow_html=True)
