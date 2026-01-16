@@ -15,8 +15,8 @@ VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8'] # Thay ID của bạn
 YOUTUBE_API_KEY = 'AIzaSyAueu53W-r0VWcYJwYrSSboOKuWYQfLn34' 
 
 # Link ảnh (Bạn có thể thay bằng link ảnh khác của PMC)
-BANNER_URL = "https://www.facebook.com/photo?fbid=1419642599529957&set=pcb.1419646612862889" # Ảnh bìa Concert
-AVATAR_URL = "https://www.facebook.com/photo?fbid=1419642546196629&set=pcb.1419646612862889" # Ảnh Avatar kênh
+BANNER_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/600369698_1419646709529546_341344486868245985_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeE8R8ouge4yL7lfWGQ5Kzk1Enry68g3cr0SevLryDdyvaWspFlBItEaOUW321Od9poGbHjYncGX9_MS7BEcv6Ww&_nc_ohc=WHolhcYE84IQ7kNvwH3WDS7&_nc_oc=AdlMDmMAztdFXjYHzVG6BJpmRMy1E7qVPlz3DWxOrwo2YrZS0MeRHLPCU2rF4_OdTXE&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=AXvAnGOph6iEFu_TWBD-SA&oh=00_AfoafS9eKG1wduMrKvUIYzK6Mu4ZIs0Q3Idtuj5CW5qvEg&oe=696F8D56" # Ảnh bìa Concert
+AVATAR_URL = "https://scontent.fvca1-2.fna.fbcdn.net/v/t39.30808-6/615158020_1419646689529548_6287187495260299308_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeHXsPpX_uCvdM4sxI1YzHApsfuCyqeesTSx-4LKp56xNH2xKnb7kNNN7Hfyvd50VHCc7oQxF_BZJHRYMdt0NlTH&_nc_ohc=OO_Xf-kHUHQQ7kNvwElNzSx&_nc_oc=AdmC3BaISTYpDGhIEupOdQbpZ_c1uNx9mlJBazPAZYoIlAO4jBJ8USLdlVRvd83oTyk&_nc_zt=23&_nc_ht=scontent.fvca1-2.fna&_nc_gid=QM52pqySiaMN8tdRWQrkLA&oh=00_AfoiuyZvZlz3kfgkaK7_UKaGyd7-pEQZtBcpuMfNJcUXPA&oe=696F73DD" # Ảnh Avatar kênh
 
 # --- HÀM 1: LẤY DATA VIDEO (API) ---
 def fetch_video_data_api(video_ids):
