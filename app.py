@@ -16,6 +16,9 @@ SHEET_NAME = 'PMC Data Center'
 VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8'] 
 YOUTUBE_API_KEY = 'AIzaSyAueu53W-r0VWcYJwYrSSboOKuWYQfLn34' 
 
+# LINK ẢNH (Bạn thay link ảnh lịch trình vào biến dưới đây)
+SCHEDULE_IMAGE_URL = "https://scontent.fsgn2-10.fna.fbcdn.net/v/t39.30808-6/616157956_1332069402299119_1295986647605451446_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGrTxMXiKy0l4ivVd92hG0Mx-Uk_itVkQ3H5ST-K1WRDUpiLGYZ4bPh_X5yaCRIM_GXAEc20SLFRvlLwzc_1hgw&_nc_ohc=BWqZmoQMt4oQ7kNvwHyvr0K&_nc_oc=AdlSsG5lBYKuLB8oB_GdgMAHacY4mQbEZUrkBgoViyT9lfuDfTKozQTzTWiIRMoty5a_s3AVN20idvfr58L6JrLT&_nc_zt=23&_nc_ht=scontent.fsgn2-10.fna&_nc_gid=Cgi28AHMPtAEMud1L3qiig&oh=00_AfodxdKttlNVn8qMBP1i_J_JkwsG0ojR3_AkYTHcJh-x-Q&oe=69700BB1" 
+
 BANNER_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/600369698_1419646709529546_341344486868245985_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeE8R8ouge4yL7lfWGQ5Kzk1Enry68g3cr0SevLryDdyvaWspFlBItEaOUW321Od9poGbHjYncGX9_MS7BEcv6Ww&_nc_ohc=WHolhcYE84IQ7kNvwH3WDS7&_nc_oc=AdlMDmMAztdFXjYHzVG6BJpmRMy1E7qVPlz3DWxOrwo2YrZS0MeRHLPCU2rF4_OdTXE&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=AXvAnGOph6iEFu_TWBD-SA&oh=00_AfoafS9eKG1wduMrKvUIYzK6Mu4ZIs0Q3Idtuj5CW5qvEg&oe=696F8D56"
 AVATAR_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/482242951_1184903749670511_116581152088062484_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHl6z1Zf722SPdydZ2cSXjkZpHk_q-4D51mkeT-r7gPndTlCsa2S-9POMvKIBb4ckII1tv_ascEHrs3kes9q9GO&_nc_ohc=0KAgPDwqVoYQ7kNvwGvYZzT&_nc_oc=AdkiSSI5Nm1z4L60wjOWhF2RlhO42CTckj5fJghrGNCIl1rRcnH9YUwQDlrcIYwvWshnvTSvZ0pqlV2sGzg6tPGG&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=VKwmNPd5x84LUuWGX44UBw&oh=00_AfpI8odqVyRf4fYhFFiablQhci6WR8tZfRwbNfW2uoUEig&oe=696F885F"
 
@@ -27,21 +30,17 @@ SOCIAL_LINKS = {
     "threads": "https://www.threads.net/@phuongmychi"
 }
 
-# Dữ liệu giả lập Voting
-VOTING_CATEGORIES = {
-    "Nữ Ca Sĩ Của Năm": [
-        {"name": "Phương Mỹ Chi", "votes": 15420, "color": "#FFD700", "img": AVATAR_URL},
-        {"name": "Hòa Minzy", "votes": 12300, "color": "#C0C0C0", "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/640px-Image_created_with_a_mobile_phone.png"},
-        {"name": "Hoàng Thùy Linh", "votes": 11500, "color": "#CD7F32", "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/640px-Image_created_with_a_mobile_phone.png"},
-        {"name": "tlinh", "votes": 9800, "color": "#444", "img": ""},
-        {"name": "Văn Mai Hương", "votes": 8500, "color": "#444", "img": ""}
-    ],
-    "Album Của Năm": [
-        {"name": "Vũ Trụ Cò Bay (PMC)", "votes": 28900, "color": "#FFD700", "img": AVATAR_URL},
-        {"name": "Loi Choi (Wren Evans)", "votes": 25400, "color": "#C0C0C0", "img": ""},
-        {"name": "Ái (tlinh)", "votes": 21000, "color": "#CD7F32", "img": ""}
-    ]
-}
+# Dữ liệu khởi tạo cho Fandom Voting (Giống hình bạn gửi)
+INIT_VOTING_DATA = [
+    {"rank": 1, "name": "KINGDOM", "votes": 74854, "change": 9},
+    {"rank": 2, "name": "Flowers", "votes": 54465, "change": 10},
+    {"rank": 3, "name": "CỪU CÓ CÁNH", "votes": 53936, "change": 7},
+    {"rank": 4, "name": "Flash", "votes": 42371, "change": 5},
+    {"rank": 5, "name": "DARLING", "votes": 35888, "change": 4},
+    {"rank": 6, "name": "PiFam", "votes": 32868, "change": 3},
+    {"rank": 7, "name": "MUZIK", "votes": 23310, "change": 4},
+    {"rank": 8, "name": "CARROT", "votes": 23072, "change": 0},
+]
 
 # ==========================================
 # --- 2. HÀM XỬ LÝ SỐ LIỆU ---
@@ -122,6 +121,7 @@ st.set_page_config(page_title="Phuong My Chi Official", page_icon="👑", layout
 
 st.markdown("""
 <style>
+    /* RESET */
     #MainMenu, header, footer {visibility: hidden;}
     .stApp { background-color: #0E1117; color: #E0E0E0; font-family: sans-serif; }
     .block-container { padding: 0 !important; max-width: 100% !important; }
@@ -157,38 +157,37 @@ st.markdown("""
     .val-comm { color: #FFD54F; font-weight: 700; }
     .vid-footer { border-top: 1px solid #333; padding-top: 12px; margin-top: 12px; font-size: 11px; color: #666; text-align: right; }
 
-    /* VOTING STYLES */
-    .podium-container { display: flex; justify-content: center; align-items: flex-end; gap: 20px; margin-bottom: 40px; padding-top: 20px; }
-    .podium-item { text-align: center; width: 120px; transition: transform 0.3s; }
-    .podium-item:hover { transform: translateY(-10px); }
-    .podium-rank { font-size: 40px; font-weight: 900; margin-bottom: -10px; z-index: 2; position: relative; text-shadow: 0 0 10px rgba(0,0,0,0.8); }
-    .podium-bar { border-radius: 10px 10px 0 0; position: relative; }
-    .podium-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid white; margin-bottom: 10px; }
-    .podium-name { font-weight: bold; font-size: 14px; margin-top: 10px; color: #FFF; }
-    .podium-votes { font-size: 12px; color: #AAA; }
+    /* LEADERBOARD TABLE (VOTING TAB) */
+    .voting-header { font-size: 24px; font-weight: bold; margin-bottom: 20px; text-align: center; color: #E0B0FF; text-transform: uppercase; letter-spacing: 1px;}
+    .vote-table-container { background: #1A1F26; border-radius: 12px; padding: 20px; border: 1px solid #333; }
+    .vote-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 10px; border-bottom: 1px solid #2A2F38; transition: background 0.2s;}
+    .vote-row:last-child { border-bottom: none; }
+    .vote-row:hover { background: #222831; }
+    
+    .rank-col { width: 50px; font-size: 18px; font-weight: bold; color: #FFD700; }
+    .name-col { flex-grow: 1; font-size: 16px; font-weight: 600; color: #FFF; text-transform: uppercase; }
+    .total-col { width: 120px; text-align: right; font-size: 16px; font-weight: bold; color: #FFF; }
+    .change-col { width: 80px; text-align: right; }
+    .badge-plus { background: rgba(76, 175, 80, 0.2); color: #4CAF50; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; }
+    .badge-neutral { background: rgba(158, 158, 158, 0.2); color: #9E9E9E; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; }
 
     /* OTHERS */
     .metric-card { background: #16181C; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #333; }
     .metric-val { font-size: 28px; font-weight: 800; color: white; }
     .metric-lbl { font-size: 12px; text-transform: uppercase; color: #888; font-weight: bold; }
     .live-dot { height: 8px; width: 8px; background: #FF4B4B; border-radius: 50%; display: inline-block; animation: blink 1.5s infinite; }
-    
     .main-content { padding: 0 40px; }
-    .content-spacer { height: 60px; } /* Spacer để tránh bị menu che */
+    .content-spacer { height: 60px; }
 
-    .calendar-container { background: #1A1F26; padding: 25px; border-radius: 20px; max-width: 800px; margin: 0 auto; border: 1px solid #333; }
-    .cal-header { text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 20px; color: white; }
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center; }
-    .cal-cell { background: #242B35; color: white; padding: 15px 0; border-radius: 10px; font-weight: bold; cursor: pointer; }
-    .cal-cell:hover { background: #FFD700; color: black; }
-    .cal-head { color: #888; font-weight: bold; padding-bottom: 10px; }
-    
-    .footer-container { background: #000; padding: 50px; margin-top: 50px; border-top: 1px solid #222; }
-    .footer-content { display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto; }
-    .footer-left h3, .footer-right h3 { color: white; margin-bottom: 10px; }
-    .footer-left p, .footer-right p { color: #888; font-size: 14px; }
-    .copyright { text-align: center; border-top: 1px solid #222; padding-top: 20px; margin-top: 30px; color: #555; font-size: 12px; }
-    
+    /* FOOTER (UPDATED STYLE) */
+    .footer-container { background: #0E1117; padding: 60px 40px 30px 40px; margin-top: 80px; border-top: 1px solid #222; text-align: center; }
+    .footer-title { font-size: 24px; font-weight: bold; color: #FFF; margin-bottom: 10px; }
+    .footer-desc { color: #888; font-size: 14px; max-width: 600px; margin: 0 auto 30px auto; line-height: 1.6; }
+    .footer-info { background: #16181C; padding: 20px; border-radius: 10px; display: inline-block; text-align: left; margin-bottom: 30px; border: 1px solid #333; }
+    .footer-info p { margin: 5px 0; font-size: 13px; color: #CCC; }
+    .footer-copy { font-size: 12px; color: #555; border-top: 1px solid #222; padding-top: 20px; }
+    .hashtag { color: #888; font-weight: bold; margin-top: 10px; display: block; letter-spacing: 1px;}
+
     @keyframes blink { 0% {opacity:1} 50% {opacity:0.4} 100% {opacity:1} }
 </style>
 """, unsafe_allow_html=True)
@@ -211,7 +210,9 @@ if 'init_done' not in st.session_state:
     st.session_state['latest'] = latest
     st.session_state['total_view_sim'] = int(latest['Youtube_View']) if latest is not None else 0
     st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
-    st.session_state['voting_sim'] = VOTING_CATEGORIES
+    # Khởi tạo dữ liệu voting
+    st.session_state['voting_data'] = INIT_VOTING_DATA
+    st.session_state['voting_history'] = [] # Lưu lịch sử để vẽ biểu đồ
     st.session_state['init_done'] = True
 
 # ==========================================
@@ -262,24 +263,12 @@ with tab_about:
 """)
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TAB LỊCH TRÌNH ---
+# --- TAB LỊCH TRÌNH (ĐÃ ĐỔI SANG ẢNH) ---
 with tab_schedule:
     st.markdown('<div class="content-spacer"></div>', unsafe_allow_html=True)
     st.markdown('<div class="main-content">', unsafe_allow_html=True)
-    st.markdown("""
-<div class="calendar-container">
-<div class="cal-header">January 2026</div>
-<div class="cal-grid">
-<div class="cal-head">T2</div><div class="cal-head">T3</div><div class="cal-head">T4</div><div class="cal-head">T5</div><div class="cal-head">T6</div><div class="cal-head">T7</div><div class="cal-head">CN</div>
-<div class="cal-cell cal-empty"></div><div class="cal-cell cal-empty"></div><div class="cal-cell cal-empty"></div>
-<div class="cal-cell">1</div><div class="cal-cell">2</div><div class="cal-cell">3</div><div class="cal-cell">4</div>
-<div class="cal-cell">5</div><div class="cal-cell">6</div><div class="cal-cell">7</div><div class="cal-cell">8</div><div class="cal-cell">9</div><div class="cal-cell">10</div><div class="cal-cell">11</div>
-<div class="cal-cell">12</div><div class="cal-cell">13</div><div class="cal-cell">14</div><div class="cal-cell">15</div><div class="cal-cell">16</div><div class="cal-cell">17</div><div class="cal-cell">18</div>
-<div class="cal-cell">19</div><div class="cal-cell">20</div><div class="cal-cell">21</div><div class="cal-cell">22</div><div class="cal-cell">23</div><div class="cal-cell">24</div><div class="cal-cell">25</div>
-<div class="cal-cell">26</div><div class="cal-cell">27</div><div class="cal-cell">28</div><div class="cal-cell">29</div><div class="cal-cell">30</div><div class="cal-cell">31</div><div class="cal-cell cal-empty"></div>
-</div>
-</div>
-""", unsafe_allow_html=True)
+    st.markdown("### 📅 LỊCH TRÌNH HOẠT ĐỘNG")
+    st.image(SCHEDULE_IMAGE_URL, use_column_width=True, caption="Lịch trình tháng này")
     st.markdown('</div>', unsafe_allow_html=True)
 
 # --- TAB THỐNG KÊ ---
@@ -302,13 +291,17 @@ with tab_stats:
         st.info("Đang tải dữ liệu...")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TAB VOTING ---
+# --- TAB VOTING (REAL-TIME BEST FANDOM) ---
 with tab_vote:
     st.markdown('<div class="content-spacer"></div>', unsafe_allow_html=True)
     st.markdown('<div class="main-content">', unsafe_allow_html=True)
     
-    vote_cat = st.selectbox("CHỌN HẠNG MỤC BÌNH CHỌN:", list(VOTING_CATEGORIES.keys()))
-    vote_content = st.empty()
+    st.markdown("""<div class="voting-header">Best Fandom Forever</div>""", unsafe_allow_html=True)
+    
+    # Placeholder cho bảng số liệu và biểu đồ
+    vote_table_placeholder = st.empty()
+    st.write("") # Spacer
+    vote_chart_placeholder = st.empty()
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -318,11 +311,32 @@ with tab_vote:
 while True:
     st.session_state['total_view_sim'] += random.randint(1, 15)
     
-    # Update Voting Sim
-    for cat in st.session_state['voting_sim']:
-        for cand in st.session_state['voting_sim'][cat]:
-            cand['votes'] += random.randint(0, 5)
+    # --- UPDATE REAL-TIME VOTING DATA ---
+    current_time = datetime.datetime.now()
+    
+    # Tăng vote ngẫu nhiên
+    for item in st.session_state['voting_data']:
+        inc = random.randint(0, 3) # Tăng ít để chậm rãi
+        item['votes'] += inc
+        item['change'] = inc # Hiển thị số tăng vừa rồi
+        
+    # Sắp xếp lại thứ hạng
+    st.session_state['voting_data'] = sorted(st.session_state['voting_data'], key=lambda x: x['votes'], reverse=True)
+    
+    # Cập nhật lại Rank số
+    for i, item in enumerate(st.session_state['voting_data']):
+        item['rank'] = i + 1
+        
+    # Lưu lịch sử để vẽ biểu đồ (chỉ lưu 20 điểm dữ liệu gần nhất để nhẹ)
+    history_point = {"Time": current_time.strftime("%H:%M:%S")}
+    for item in st.session_state['voting_data']:
+        history_point[item['name']] = item['votes']
+    
+    st.session_state['voting_history'].append(history_point)
+    if len(st.session_state['voting_history']) > 30:
+        st.session_state['voting_history'].pop(0)
 
+    # --- API SYNC ---
     if int(time.time()) % 60 == 0:
         df_new, latest_new = load_sheet_data()
         if latest_new is not None:
@@ -331,14 +345,13 @@ while True:
                 st.session_state['total_view_sim'] = int(latest_new['Youtube_View'])
         st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
 
-    # Render Home
+    # --- RENDER HOME ---
     lat = st.session_state['latest']
     if lat is not None:
         with metrics_placeholder.container():
             c1, c2, c3, c4 = st.columns(4)
             c1.markdown(f"""<div class="metric-card"><div class="metric-lbl">TOTAL VIEWS <span class="live-dot"></span></div><div class="metric-val" style="color:#FF4B4B">{st.session_state['total_view_sim']:,}</div></div>""", unsafe_allow_html=True)
             c2.markdown(f"""<div class="metric-card"><div class="metric-lbl">SUBSCRIBERS</div><div class="metric-val">{lat['Youtube_Sub']:,}</div></div>""", unsafe_allow_html=True)
-            # Dùng biến lat đã được fix lỗi số 0
             tt_val = lat['TikTok_Follower']
             c3.markdown(f"""<div class="metric-card"><div class="metric-lbl">TIKTOK FANS</div><div class="metric-val">{tt_val:,}</div></div>""", unsafe_allow_html=True)
             c4.markdown(f"""<div class="metric-card"><div class="metric-lbl">SPOTIFY</div><div class="metric-val" style="color:#1DB954">{lat['Spotify_Listener']:,}</div></div>""", unsafe_allow_html=True)
@@ -366,72 +379,71 @@ while True:
 </div>
 """, unsafe_allow_html=True)
 
-    # Render Voting
-    current_cat_data = st.session_state['voting_sim'][vote_cat]
-    sorted_candidates = sorted(current_cat_data, key=lambda x: x['votes'], reverse=True)
-    
-    with vote_content.container():
-        if len(sorted_candidates) >= 3:
-            top1, top2, top3 = sorted_candidates[0], sorted_candidates[1], sorted_candidates[2]
-            
-            st.markdown(f"""
-            <div class="podium-container">
-                <div class="podium-item" style="height: 180px;">
-                    <div style="color:#C0C0C0; font-weight:bold;">#2</div>
-                    <img src="{top2['img'] if top2['img'] else 'https://via.placeholder.com/80'}" class="podium-img" style="border-color:#C0C0C0">
-                    <div class="podium-bar" style="height:100px; background:#C0C0C0;"></div>
-                    <div class="podium-name">{top2['name']}</div>
-                    <div class="podium-votes">{top2['votes']:,}</div>
-                </div>
-                <div class="podium-item" style="height: 230px;">
-                    <div class="podium-rank" style="color:#FFD700;">👑 #1</div>
-                    <img src="{top1['img'] if top1['img'] else 'https://via.placeholder.com/80'}" class="podium-img" style="border-color:#FFD700; width:100px; height:100px;">
-                    <div class="podium-bar" style="height:140px; background: linear-gradient(to top, #FFD700, #FDB931);"></div>
-                    <div class="podium-name" style="font-size:16px; color:#FFD700;">{top1['name']}</div>
-                    <div class="podium-votes" style="color:white;">{top1['votes']:,}</div>
-                </div>
-                <div class="podium-item" style="height: 160px;">
-                    <div style="color:#CD7F32; font-weight:bold;">#3</div>
-                    <img src="{top3['img'] if top3['img'] else 'https://via.placeholder.com/80'}" class="podium-img" style="border-color:#CD7F32">
-                    <div class="podium-bar" style="height:80px; background:#CD7F32;"></div>
-                    <div class="podium-name">{top3['name']}</div>
-                    <div class="podium-votes">{top3['votes']:,}</div>
-                </div>
+    # --- RENDER VOTING TABLE (HTML) ---
+    with vote_table_placeholder.container():
+        # Tạo HTML table
+        html_rows = ""
+        for item in st.session_state['voting_data']:
+            change_html = f"<span class='badge-plus'>+{item['change']}</span>" if item['change'] > 0 else "<span class='badge-neutral'>0</span>"
+            html_rows += f"""
+            <div class="vote-row">
+                <div class="rank-col">#{item['rank']}</div>
+                <div class="name-col">{item['name']}</div>
+                <div class="total-col">{item['votes']:,}</div>
+                <div class="change-col">{change_html}</div>
             </div>
-            <br>
-            """, unsafe_allow_html=True)
+            """
+        
+        st.markdown(f"""
+        <div class="vote-table-container">
+            <div class="vote-row" style="border-bottom: 2px solid #444; margin-bottom: 10px;">
+                <div class="rank-col" style="font-size:14px; color:#888;">HẠNG</div>
+                <div class="name-col" style="font-size:14px; color:#888;">ỨNG VIÊN</div>
+                <div class="total-col" style="font-size:14px; color:#888;">TỔNG VOTE</div>
+                <div class="change-col" style="font-size:14px; color:#888;">THAY ĐỔI</div>
+            </div>
+            {html_rows}
+        </div>
+        """, unsafe_allow_html=True)
+
+    # --- RENDER VOTING CHART ---
+    with vote_chart_placeholder.container():
+        if len(st.session_state['voting_history']) > 2:
+            st.markdown("#### 📈 DIỄN BIẾN ĐƯỜNG ĐUA")
+            df_hist = pd.DataFrame(st.session_state['voting_history'])
+            # Melt dataframe để vẽ nhiều đường
+            df_melt = df_hist.melt(id_vars=['Time'], var_name='Candidate', value_name='Votes')
             
-            # --- ĐÃ XÓA VÒNG LẶP LIST RANK #4, #5 ---
-                
-            st.markdown("#### 📈 DIỄN BIẾN BÌNH CHỌN (24H QUA)")
-            chart_data = []
-            now = datetime.datetime.now()
-            for cand in sorted_candidates[:3]:
-                for h in range(10):
-                    time_point = now - datetime.timedelta(hours=10-h)
-                    sim_vote = cand['votes'] - (10-h) * random.randint(100, 500)
-                    chart_data.append({"Time": time_point, "Candidate": cand['name'], "Votes": sim_vote})
-            
-            df_chart = pd.DataFrame(chart_data)
-            fig = px.line(df_chart, x="Time", y="Votes", color="Candidate", color_discrete_sequence=['#FFD700', '#C0C0C0', '#CD7F32'])
-            fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', font_color='#ccc')
+            fig = px.line(df_melt, x='Time', y='Votes', color='Candidate', 
+                          color_discrete_sequence=px.colors.qualitative.Pastel)
+            fig.update_layout(
+                plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', font_color='#ccc',
+                xaxis=dict(showgrid=False), yaxis=dict(showgrid=True, gridcolor='#333'),
+                legend=dict(orientation="h", y=1.1)
+            )
             st.plotly_chart(fig, use_container_width=True)
 
     time.sleep(1)
 
-# FOOTER
+# FOOTER (Updated Content)
 st.markdown("""
 <div class="footer-container">
-<div class="footer-content">
-<div class="footer-left">
-<h3>WINGS for PMC</h3>
-<p>Kết nối cùng cộng đồng fan và thưởng thức âm nhạc chất lượng.</p>
-</div>
-<div class="footer-right">
-<h3>Liên hệ</h3>
-<p>Email: booking@phuongmychi.com</p>
-</div>
-</div>
-<div class="copyright">© 2026 WINGSforPMC.</div>
+    <div class="footer-title">WeYoung Tracker</div>
+    <div class="footer-desc">
+        Hệ thống theo dõi và phân tích bình chọn cho giải thưởng WeYoung 2025.<br>
+        Truy cập trang web giải thưởng để bình chọn.
+    </div>
+    
+    <div class="footer-info">
+        <p><strong>Thông tin</strong></p>
+        <p>• Dữ liệu được cập nhật trực tiếp từ hệ thống định kỳ mỗi 10 giây.</p>
+        <p>• Đồng thời ghi nhận lại mỗi 10 phút để phân tích và dự đoán.</p>
+    </div>
+    
+    <div class="footer-copy">
+        © Bản quyền giải thưởng thuộc về Công ty cổ phần VCCorp.<br>
+        Phát triển độc lập bởi người hâm mộ chương trình ATVNCG.
+        <span class="hashtag">#camonvidaden</span>
+    </div>
 </div>
 """, unsafe_allow_html=True)
