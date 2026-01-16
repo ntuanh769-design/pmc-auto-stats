@@ -213,7 +213,7 @@ with tab_about:
     with c2:
         st.markdown("""
         ### PHƯƠNG MỸ CHI
-        **Phương Mỹ Chi** (sinh năm 2003) là ngôi sao sáng của dòng nhạc dân ca và nhạc nhẹ Việt Nam, được biết đến rộng rãi sau khi đạt danh hiệu Á quân chương trình *Giọng hát Việt nhí* mùa đầu tiên (2013).
+        **Phuong My Chi** (sinh năm 2003) là một nữ ca sĩ nổi tiếng Việt Nam, được biết đến rộng rãi sau khi đạt danh hiệu Á quân chương trình *Giọng hát Việt nhí* mùa đầu tiên (2013).
     
     * **2013:** Á quân The Voice Kids Vietnam. Gây bão với "Quê Em Mùa Nước Lũ".
     * **2014-2020:** Theo đuổi dòng nhạc dân ca, trữ tình. Phát hành nhiều album thành công như "Thương về miền Trung", "Chờ người". Đạt giải Mai Vàng, Cống Hiến.
