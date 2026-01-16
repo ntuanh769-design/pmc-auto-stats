@@ -13,7 +13,7 @@ import json
 # --- CẤU HÌNH ---
 SHEET_NAME = 'PMC Data Center'
 # Bạn điền 3 ID Video muốn theo dõi vào đây:
-VIDEO_IDS = ['sZrIbpwjTwk&list=RDsZrIbpwjTwk&start_radio=1', 'BmrdGQ0LRRo&list=RDBmrdGQ0LRRo&start_radio=1', 'V1ah6tmNUz8&list=RDV1ah6tmNUz8&start_radio=1'] 
+VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8'] 
 # (Nhớ thay ID_VIDEO_2, ID_VIDEO_3 bằng ID thật của bạn)
 
 YOUTUBE_API_KEY = 'AIzaSyAueu53W-r0VWcYJwYrSSboOKuWYQfLn34' 
