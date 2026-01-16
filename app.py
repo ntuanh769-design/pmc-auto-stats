@@ -12,11 +12,7 @@ import json
 # --- CẤU HÌNH ---
 SHEET_NAME = 'PMC Data Center'
 # Thay 3 ID Video của bạn vào đây:
-VIDEO_IDS = [
-    'k3C6-1f9gHw',  # Video 1
-    'sJytolUBttX8', # Video 2
-    '7P6Wv5_o-2Q'   # Video 3
-]
+VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8']
 YOUTUBE_API_KEY = 'AIzaSyAueu53W-r0VWcYJwYrSSboOKuWYQfLn34' 
 
 # --- HÀM 1: LẤY DATA 3 VIDEO (API) ---
