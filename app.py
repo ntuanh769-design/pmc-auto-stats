@@ -16,7 +16,6 @@ SHEET_NAME = 'PMC Data Center'
 VIDEO_IDS = ['sZrIbpwjTwk', 'BmrdGQ0LRRo', 'V1ah6tmNUz8'] 
 YOUTUBE_API_KEY = 'AIzaSyAueu53W-r0VWcYJwYrSSboOKuWYQfLn34' 
 
-# Link ảnh
 SCHEDULE_IMAGE_URL = "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=2068&auto=format&fit=crop" 
 BANNER_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/600369698_1419646709529546_341344486868245985_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeE8R8ouge4yL7lfWGQ5Kzk1Enry68g3cr0SevLryDdyvaWspFlBItEaOUW321Od9poGbHjYncGX9_MS7BEcv6Ww&_nc_ohc=WHolhcYE84IQ7kNvwH3WDS7&_nc_oc=AdlMDmMAztdFXjYHzVG6BJpmRMy1E7qVPlz3DWxOrwo2YrZS0MeRHLPCU2rF4_OdTXE&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=AXvAnGOph6iEFu_TWBD-SA&oh=00_AfoafS9eKG1wduMrKvUIYzK6Mu4ZIs0Q3Idtuj5CW5qvEg&oe=696F8D56"
 AVATAR_URL = "https://scontent.fvca1-1.fna.fbcdn.net/v/t39.30808-6/482242951_1184903749670511_116581152088062484_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=105&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHl6z1Zf722SPdydZ2cSXjkZpHk_q-4D51mkeT-r7gPndTlCsa2S-9POMvKIBb4ckII1tv_ascEHrs3kes9q9GO&_nc_ohc=0KAgPDwqVoYQ7kNvwGvYZzT&_nc_oc=AdkiSSI5Nm1z4L60wjOWhF2RlhO42CTckj5fJghrGNCIl1rRcnH9YUwQDlrcIYwvWshnvTSvZ0pqlV2sGzg6tPGG&_nc_zt=23&_nc_ht=scontent.fvca1-1.fna&_nc_gid=VKwmNPd5x84LUuWGX44UBw&oh=00_AfpI8odqVyRf4fYhFFiablQhci6WR8tZfRwbNfW2uoUEig&oe=696F885F"
@@ -148,7 +147,7 @@ st.markdown("""
         color: white; padding: 15px; border-radius: 12px 12px 0 0; 
         text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 0;
     }
-    .vote-table { 
+    .vote-table-container { 
         background: #FDFBF7; color: #333; 
         border-radius: 0 0 12px 12px; padding: 10px; 
     }
@@ -159,7 +158,7 @@ st.markdown("""
     .vote-row:last-child { border-bottom: none; }
     
     .col-rank { width: 40px; font-weight: bold; font-size: 18px; color: #F57C00; }
-    .col-name { flex-grow: 1; font-weight: 600; font-size: 16px; color: #333; }
+    .col-name { flex-grow: 1; font-weight: 600; font-size: 16px; color: #333; text-transform: uppercase; }
     .col-total { width: 100px; text-align: right; font-weight: bold; font-size: 16px; color: #333; }
     .col-change { width: 60px; text-align: right; }
     
@@ -214,18 +213,21 @@ svg_icons = {
 # ==========================================
 # --- 4. STATE & LOGIC ---
 # ==========================================
+# Khởi tạo dữ liệu nếu chưa có
 if 'init_done' not in st.session_state:
     df, latest = load_sheet_data()
     st.session_state['df'] = df
     st.session_state['latest'] = latest
     st.session_state['total_view_sim'] = int(latest['Youtube_View']) if latest is not None else 0
     st.session_state['video_data'] = fetch_video_data_api(VIDEO_IDS)
-    st.session_state['voting_data'] = INIT_VOTING_DATA
-    st.session_state['voting_history'] = []
     st.session_state['init_done'] = True
 
-if 'voting_data' not in st.session_state: st.session_state['voting_data'] = INIT_VOTING_DATA
-if 'voting_history' not in st.session_state: st.session_state['voting_history'] = []
+# --- FIX LỖI KEYERROR: Kiểm tra và khởi tạo 'voting_data' nếu bị thiếu ---
+if 'voting_data' not in st.session_state:
+    st.session_state['voting_data'] = INIT_VOTING_DATA
+
+if 'voting_history' not in st.session_state:
+    st.session_state['voting_history'] = []
 
 # ==========================================
 # --- 5. MAIN LAYOUT ---
@@ -234,20 +236,20 @@ tab_home, tab_about, tab_schedule, tab_stats, tab_vote = st.tabs(["TRANG CHỦ",
 
 with tab_home:
     st.markdown(f"""
-    <div class="banner-container"><img src="{BANNER_URL}" class="banner-img"></div>
-    <div class="profile-section">
-        <img src="{AVATAR_URL}" class="avatar">
-        <div class="artist-name">PHƯƠNG MỸ CHI</div>
-        <div style="color:#BBB; margin-top:5px; font-weight:600;">"Cô bé dân ca" ngày nào giờ đã trở thành một biểu tượng âm nhạc trẻ trung, năng động và đầy sáng tạo.</div>
-        <div class="social-links">
-            <a href="{SOCIAL_LINKS['facebook']}" target="_blank" class="social-icon">{svg_icons['facebook']}</a>
-            <a href="{SOCIAL_LINKS['instagram']}" target="_blank" class="social-icon">{svg_icons['instagram']}</a>
-            <a href="{SOCIAL_LINKS['threads']}" target="_blank" class="social-icon">{svg_icons['threads']}</a>
-            <a href="{SOCIAL_LINKS['youtube']}" target="_blank" class="social-icon">{svg_icons['youtube']}</a>
-            <a href="{SOCIAL_LINKS['spotify']}" target="_blank" class="social-icon">{svg_icons['spotify']}</a>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+<div class="banner-container"><img src="{BANNER_URL}" class="banner-img"></div>
+<div class="profile-section">
+<img src="{AVATAR_URL}" class="avatar">
+<div class="artist-name">PHƯƠNG MỸ CHI</div>
+<div style="color:#BBB; margin-top:5px; font-weight:600;">"Cô bé dân ca" ngày nào giờ đã trở thành một biểu tượng âm nhạc trẻ trung, năng động và đầy sáng tạo.</div>
+<div class="social-links">
+<a href="{SOCIAL_LINKS['facebook']}" target="_blank" class="social-icon">{svg_icons['facebook']}</a>
+<a href="{SOCIAL_LINKS['instagram']}" target="_blank" class="social-icon">{svg_icons['instagram']}</a>
+<a href="{SOCIAL_LINKS['threads']}" target="_blank" class="social-icon">{svg_icons['threads']}</a>
+<a href="{SOCIAL_LINKS['youtube']}" target="_blank" class="social-icon">{svg_icons['youtube']}</a>
+<a href="{SOCIAL_LINKS['spotify']}" target="_blank" class="social-icon">{svg_icons['spotify']}</a>
+</div>
+</div>
+""", unsafe_allow_html=True)
 
     st.markdown('<div class="main-content">', unsafe_allow_html=True)
     st.markdown("### 🔥 REAL-TIME STATISTICS")
@@ -303,15 +305,17 @@ with tab_stats:
         st.info("Đang tải dữ liệu...")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TAB VOTING (ĐÚNG MẪU BẢNG) ---
+# --- TAB VOTING (REAL-TIME BEST FANDOM) ---
 with tab_vote:
     st.markdown('<div class="content-spacer"></div>', unsafe_allow_html=True)
     st.markdown('<div class="main-content">', unsafe_allow_html=True)
     
-    # Placeholder
-    vote_container = st.empty()
-    st.write("")
-    chart_container = st.empty()
+    st.markdown("""<div class="vote-header">Best Fandom Forever</div>""", unsafe_allow_html=True)
+    
+    # Placeholder cho bảng số liệu và biểu đồ
+    vote_table_placeholder = st.empty()
+    st.write("") 
+    vote_chart_placeholder = st.empty()
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -324,21 +328,29 @@ footer_placeholder = st.empty()
 while True:
     st.session_state['total_view_sim'] += random.randint(1, 15)
     
-    # Update Voting Data
+    # --- UPDATE REAL-TIME VOTING DATA ---
+    current_time = datetime.datetime.now()
+    
+    # Tăng vote ngẫu nhiên
     for item in st.session_state['voting_data']:
         inc = random.randint(0, 3) 
         item['votes'] += inc
         item['change'] = inc 
         
     st.session_state['voting_data'] = sorted(st.session_state['voting_data'], key=lambda x: x['votes'], reverse=True)
-    for i, item in enumerate(st.session_state['voting_data']): item['rank'] = i + 1
+    
+    for i, item in enumerate(st.session_state['voting_data']):
+        item['rank'] = i + 1
         
-    current_time = datetime.datetime.now()
     history_point = {"Time": current_time.strftime("%H:%M:%S")}
-    for item in st.session_state['voting_data']: history_point[item['name']] = item['votes']
+    for item in st.session_state['voting_data']:
+        history_point[item['name']] = item['votes']
+    
     st.session_state['voting_history'].append(history_point)
-    if len(st.session_state['voting_history']) > 30: st.session_state['voting_history'].pop(0)
+    if len(st.session_state['voting_history']) > 30:
+        st.session_state['voting_history'].pop(0)
 
+    # --- API SYNC ---
     if int(time.time()) % 60 == 0:
         df_new, latest_new = load_sheet_data()
         if latest_new is not None:
@@ -354,7 +366,8 @@ while True:
             c1, c2, c3, c4 = st.columns(4)
             c1.markdown(f"""<div class="metric-card"><div class="metric-lbl">TOTAL VIEWS <span class="live-dot"></span></div><div class="metric-val" style="color:#FF4B4B">{st.session_state['total_view_sim']:,}</div></div>""", unsafe_allow_html=True)
             c2.markdown(f"""<div class="metric-card"><div class="metric-lbl">SUBSCRIBERS</div><div class="metric-val">{lat['Youtube_Sub']:,}</div></div>""", unsafe_allow_html=True)
-            c3.markdown(f"""<div class="metric-card"><div class="metric-lbl">TIKTOK FANS</div><div class="metric-val">{lat['TikTok_Follower']:,}</div></div>""", unsafe_allow_html=True)
+            tt_val = lat['TikTok_Follower']
+            c3.markdown(f"""<div class="metric-card"><div class="metric-lbl">TIKTOK FANS</div><div class="metric-val">{tt_val:,}</div></div>""", unsafe_allow_html=True)
             c4.markdown(f"""<div class="metric-card"><div class="metric-lbl">SPOTIFY</div><div class="metric-val" style="color:#1DB954">{lat['Spotify_Listener']:,}</div></div>""", unsafe_allow_html=True)
 
         with video_placeholder.container():
@@ -364,7 +377,7 @@ while True:
                 if vid_id in v_data:
                     d = v_data[vid_id]
                     with cols[i % 3]:
-                        # HTML CHUẨN (KHÔNG THỤT DÒNG)
+                        # HTML CHUẨN (KHÔNG THỤT DÒNG - FIX LỖI HIỂN THỊ CODE)
                         st.markdown(f"""
 <div class="video-card">
 <a href="https://www.youtube.com/watch?v={d['id']}" target="_blank">
@@ -381,11 +394,8 @@ while True:
 </div>
 """, unsafe_allow_html=True)
 
-    # --- RENDER VOTING ---
-    with vote_container.container():
-        # Header tím
-        st.markdown('<div class="vote-header">Best Fandom Forever</div>', unsafe_allow_html=True)
-        # Bảng HTML
+    # --- RENDER VOTING TABLE (HTML CHUẨN) ---
+    with vote_table_placeholder.container():
         rows_html = ""
         for item in st.session_state['voting_data']:
             change_cls = "badge-plus" if item['change'] > 0 else "badge-neutral"
@@ -399,45 +409,8 @@ while True:
 </div>
 """
         st.markdown(f"""
-<div class="vote-table">
-<div class="vote-row" style="border-bottom:2px solid #DDD;">
-<div class="col-rank" style="font-size:14px; color:#999;">HẠNG</div>
-<div class="col-name" style="font-size:14px; color:#999;">ỨNG VIÊN</div>
-<div class="col-total" style="font-size:14px; color:#999;">TỔNG</div>
-<div class="col-change" style="font-size:14px; color:#999;">THAY ĐỔI</div>
-</div>
-{rows_html}
-</div>
-""", unsafe_allow_html=True)
-
-    with chart_container.container():
-        if len(st.session_state['voting_history']) > 2:
-            st.markdown("#### 📈 DIỄN BIẾN ĐƯỜNG ĐUA")
-            df_hist = pd.DataFrame(st.session_state['voting_history'])
-            df_melt = df_hist.melt(id_vars=['Time'], var_name='Candidate', value_name='Votes')
-            fig = px.line(df_melt, x='Time', y='Votes', color='Candidate')
-            fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', font_color='#ccc')
-            st.plotly_chart(fig, use_container_width=True)
-
-    # --- RENDER FOOTER (TRONG LOOP ĐỂ HIỆN) ---
-    with footer_placeholder.container():
-        st.markdown("""
-<div class="footer-container">
-<div class="footer-title">WeYoung Tracker</div>
-<div class="footer-desc">
-Hệ thống theo dõi và phân tích bình chọn cho giải thưởng WeYoung 2025. Truy cập trang web giải thưởng để bình chọn.
-</div>
-<div class="footer-info-box">
-<div class="footer-info-title">Thông tin</div>
-<div class="footer-info-text">• Dữ liệu được cập nhật trực tiếp từ hệ thống định kỳ mỗi 10 giây.</div>
-<div class="footer-info-text">• Đồng thời ghi nhận lại mỗi 10 phút để phân tích và dự đoán.</div>
-</div>
-<div class="footer-bottom">
-© Bản quyền giải thưởng thuộc về Công ty cổ phần VCCorp.<br>
-Phát triển độc lập bởi người hâm mộ chương trình ATVNCG.
-<br><span class="hashtag">#camonvidaden</span>
-</div>
-</div>
-""", unsafe_allow_html=True)
-
-    time.sleep(1)
+<div class="vote-table-container">
+<div class="vote-row" style="border-bottom:2px solid #444; margin-bottom:10px;">
+<div class="col-rank" style="font-size:14px; color:#888;">HẠNG</div>
+<div class="col-name" style="font-size:14px; color:#888;">ỨNG VIÊN</div>
+<div class="col-total" style="font-size:14px; color
